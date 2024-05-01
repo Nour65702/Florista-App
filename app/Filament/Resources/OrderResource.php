@@ -40,7 +40,7 @@ class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
+    protected static ?string $navigationIcon = 'heroicon-m-shopping-bag';
     protected static ?string $navigationGroup = 'System Management';
     protected static ?int $navigationSort = 5;
 
@@ -52,7 +52,7 @@ class OrderResource extends Resource
                     Section::make('Order Information')
                         ->schema([
                             Select::make('user_id')
-                                ->relationship(name: 'user', titleAttribute: 'first_name')
+                                ->relationship(name: 'user', titleAttribute: 'name')
                                 ->label('Customer')
                                 ->searchable()
                                 ->preload()
@@ -174,7 +174,7 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('user.first_name')
+                TextColumn::make('user.name')
                     ->label('Customer')
                     ->searchable()
                     ->sortable(),

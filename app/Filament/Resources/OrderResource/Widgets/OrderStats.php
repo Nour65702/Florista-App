@@ -18,4 +18,5 @@ class OrderStats extends BaseWidget
             Stat::make('Average Price', Number::currency(Order::query()->avg('total_price'),'SYP')),
         ];
     }
+    
 }

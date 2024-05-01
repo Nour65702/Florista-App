@@ -15,7 +15,7 @@ class CategoryController extends Controller
     {
         $category = Category::with('children.collections.products')->get();
         return ApiResponse::success([
-            'categories' => $category
+            'categories' => CategoryResource::collection($category)
         ]);
     }
 

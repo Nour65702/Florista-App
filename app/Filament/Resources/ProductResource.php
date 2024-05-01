@@ -21,6 +21,8 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\Summarizers\Average;
+use Filament\Tables\Columns\Summarizers\Range;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -31,7 +33,7 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-gift-top';
+    protected static ?string $navigationIcon = 'heroicon-m-gift-top';
     protected static ?string $navigationGroup = 'System Management';
     protected static ?int $navigationSort = 4;
 
@@ -106,9 +108,8 @@ class ProductResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('size')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('rate')
-                    ->numeric()
-                    ->sortable(),
+                TextColumn::make('rate')
+                    ->summarize(Average::make()),
                 IconColumn::make('in_stock')
                     ->boolean(),
                 IconColumn::make('on_sale')
@@ -130,11 +131,11 @@ class ProductResource extends Resource
             ])
             ->actions([
                 ActionGroup::make([
-                   ViewAction::make(),
-                   EditAction::make(),
-                   DeleteAction::make()
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make()
                 ])
-              
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

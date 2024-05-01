@@ -14,6 +14,10 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,7 +27,7 @@ class ProviderResource extends Resource
 {
     protected static ?string $model = Provider::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-plus';
+    protected static ?string $navigationIcon = 'heroicon-m-user-plus';
     protected static ?string $navigationGroup = 'User Management';
 
     public static function form(Form $form): Form
@@ -31,11 +35,11 @@ class ProviderResource extends Resource
         return $form
             ->schema([
                 Section::make('Provider Details')
-                ->schema([
+                    ->schema([
 
-                    TextInput::make('name')
-                        ->required()
-                        ->maxLength(255),
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
                         TextInput::make('email')
                             ->email()
                             ->required()
@@ -50,7 +54,7 @@ class ProviderResource extends Resource
                             ->required()
                             ->numeric()
                             ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
-                ])->columns(3),
+                    ])->columns(3),
             ]);
     }
 
@@ -58,10 +62,11 @@ class ProviderResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id'),
                 TextColumn::make('name')
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('email')
+                    ->sortable()
                     ->searchable()
                     ->icon('heroicon-m-envelope')
                     ->iconColor('primary'),
@@ -81,8 +86,11 @@ class ProviderResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make()
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

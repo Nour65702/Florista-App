@@ -27,7 +27,7 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-m-users';
     protected static ?string $navigationGroup = 'User Management';
     protected static ?string $recordTitleAttribute = 'first_name';
     protected static ?int $navigationSort = 1;
@@ -40,10 +40,8 @@ class UserResource extends Resource
                 Section::make('User Info')
                     ->schema([
 
-                        TextInput::make('first_name')
-                            ->required()
-                            ->maxLength(255),
-                        TextInput::make('last_name')
+                        
+                        TextInput::make('name')
                             ->required()
                             ->maxLength(255),
                         TextInput::make('email')
@@ -68,10 +66,8 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                // TextColumn::make('id'),
-                TextColumn::make('first_name')
-                    ->searchable(),
-                TextColumn::make('last_name')
+              
+                TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('email')
                     ->searchable()

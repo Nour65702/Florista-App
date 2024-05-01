@@ -7,13 +7,16 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
+use Filament\Panel;
 use Laravel\Passport\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements HasMedia, HasName
+class User extends Authenticatable implements FilamentUser, HasMedia, HasName
 {
-    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia;
+    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -21,8 +24,7 @@ class User extends Authenticatable implements HasMedia, HasName
      * @var array<int, string>
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'name',
         'phone',
         'email',
         'password',
@@ -80,4 +82,13 @@ class User extends Authenticatable implements HasMedia, HasName
     {
         return $this->hasMany(Order::class);
     }
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->hasRole('Admin');
+    }
+    // public function roles()
+    // {
+    //     return $this->belongsToMany(Role::class);
+    // }
+    
 }

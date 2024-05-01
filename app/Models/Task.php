@@ -15,6 +15,7 @@ class Task extends Model
 
     protected $fillable = [
         'provider_id',
+        'order_id',
         'title',
         'description',
         'due_date',
@@ -25,5 +26,9 @@ class Task extends Model
     public function provider()
     {
         return $this->belongsTo(Provider::class, 'provider_id');
+    }
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 }

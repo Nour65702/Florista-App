@@ -26,8 +26,7 @@ class StoreRegisterFormRequest extends FormRequest
     {
         return [
 
-            'first_name' => 'required|max:50',
-            'last_name' => 'required|max:50',
+            'name' => 'required|max:50',
             'email' => 'required|unique:users,email|email',
             'phone' => ['required', 'digits:10', 'string', 'regex:/^[0-9]+$/'],
             'password' => 'required|min:6|confirmed',

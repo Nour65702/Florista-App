@@ -13,6 +13,7 @@ class Product extends BaseModel
         'name',
         'price',
         'description',
+        'quantity',
         'size',
         'rate',
         'is_active',

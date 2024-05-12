@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
+use App\Models\Alert;
+use App\Models\OrderItem;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
@@ -28,6 +30,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Lang;
 
 class ProductResource extends Resource
 {
@@ -61,6 +64,9 @@ class ProductResource extends Resource
                             Textarea::make('description')
                                 ->required()
                                 ->columnSpanFull(),
+                            TextInput::make('quantity')
+                                ->required()
+                                ->numeric(),
                         ])->columns(2)
                 ])->columnSpan(2),
                 Group::make()->schema([
@@ -108,6 +114,8 @@ class ProductResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('size')
                     ->searchable(),
+                    Tables\Columns\TextColumn::make('quantity')
+                    ->searchable(),
                 TextColumn::make('rate')
                     ->summarize(Average::make()),
                 IconColumn::make('in_stock')
@@ -151,6 +159,8 @@ class ProductResource extends Resource
         ];
     }
 
+    
+    
     public static function getPages(): array
     {
         return [
@@ -159,4 +169,5 @@ class ProductResource extends Resource
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }
+  
 }

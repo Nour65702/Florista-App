@@ -31,6 +31,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Request;
 
 class ProductResource extends Resource
 {
@@ -65,6 +66,9 @@ class ProductResource extends Resource
                                 ->required()
                                 ->columnSpanFull(),
                             TextInput::make('quantity')
+                                ->required()
+                                ->numeric(),
+                                Forms\Components\TextInput::make('min_level')
                                 ->required()
                                 ->numeric(),
                         ])->columns(2)
@@ -107,14 +111,13 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('collection.name')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('price')
                     ->money()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('size')
                     ->searchable(),
-                    Tables\Columns\TextColumn::make('quantity')
+                Tables\Columns\TextColumn::make('quantity')
                     ->searchable(),
                 TextColumn::make('rate')
                     ->summarize(Average::make()),
@@ -124,6 +127,14 @@ class ProductResource extends Resource
                     ->boolean(),
                 IconColumn::make('is_active')
                     ->boolean(),
+
+
+                Tables\Columns\TextColumn::make('min_level')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('triggered_at')
+                    ->dateTime()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -152,6 +163,7 @@ class ProductResource extends Resource
             ]);
     }
 
+  
     public static function getRelations(): array
     {
         return [
@@ -159,8 +171,9 @@ class ProductResource extends Resource
         ];
     }
 
-    
-    
+
+
+
     public static function getPages(): array
     {
         return [
@@ -169,5 +182,4 @@ class ProductResource extends Resource
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }
-  
 }

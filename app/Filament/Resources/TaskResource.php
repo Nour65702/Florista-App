@@ -29,7 +29,7 @@ class TaskResource extends Resource
 {
     protected static ?string $model = Task::class;
 
-    protected static ?string $navigationIcon = 'heroicon-m-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-pencil-square';
 
     public static function form(Form $form): Form
     {

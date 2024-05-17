@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('Provider_licences', function (Blueprint $table) {
+        Schema::create('provider_licences', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('phone');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->enum('status',['Accepted','Rejected','pending'])->default('pending');
+
+            $table->foreignId('provider_id')->constrained('providers')
+            ->cascadeOnDelete()
+            ->cascadeOnUpdate();
+
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('Provider_licences');
+        Schema::dropIfExists('provider_licences');
     }
 };

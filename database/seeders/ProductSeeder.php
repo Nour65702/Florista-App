@@ -21,6 +21,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Description of Product 1',
                 'size' => 'medium',
                 'rate' => 4,
+                'min_level' => 2,
                 'is_active' => true,
                 'in_stock' => true,
                 'on_sale' => false,
@@ -32,9 +33,11 @@ class ProductSeeder extends Seeder
                 'description' => 'Description of Product 2',
                 'size' => 'small',
                 'rate' => 5,
+                'min_level' => 3,
                 'is_active' => true,
                 'in_stock' => true,
                 'on_sale' => true,
+                
             ],
 
         ];

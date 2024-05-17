@@ -21,7 +21,7 @@ class AlertResource extends Resource
 {
     protected static ?string $model = Alert::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-bell-alert';
 
     public static function form(Form $form): Form
     {
@@ -35,13 +35,7 @@ class AlertResource extends Resource
                             ->searchable()
                             ->preload()
                             ->required(),
-                        // Forms\Components\TextInput::make('quantity')
-                        //     ->required()
-                        //     ->numeric(),
-                        Forms\Components\TextInput::make('min_level')
-                            ->required()
-                            ->numeric(),
-                        Forms\Components\DateTimePicker::make('triggered_at'),
+                
                     ])->columns(2)
 
             ]);
@@ -53,12 +47,6 @@ class AlertResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('product.name')
                     ->numeric()
-                    ->sortable(),
-                // Tables\Columns\TextColumn::make('quantity')
-                //     ->numeric()
-                //     ->sortable(),
-                Tables\Columns\TextColumn::make('triggered_at')
-                    ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

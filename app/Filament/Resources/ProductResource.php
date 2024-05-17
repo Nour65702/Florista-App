@@ -67,6 +67,11 @@ class ProductResource extends Resource
                             TextInput::make('quantity')
                                 ->required()
                                 ->numeric(),
+
+                            Forms\Components\TextInput::make('min_level')
+                                ->required()
+                                ->numeric(),
+                            Forms\Components\DateTimePicker::make('triggered_at'),
                         ])->columns(2)
                 ])->columnSpan(2),
                 Group::make()->schema([
@@ -114,7 +119,7 @@ class ProductResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('size')
                     ->searchable(),
-                    Tables\Columns\TextColumn::make('quantity')
+                Tables\Columns\TextColumn::make('quantity')
                     ->searchable(),
                 TextColumn::make('rate')
                     ->summarize(Average::make()),
@@ -124,6 +129,10 @@ class ProductResource extends Resource
                     ->boolean(),
                 IconColumn::make('is_active')
                     ->boolean(),
+
+                TextColumn::make('min_level')
+                    ->sortable(),
+                TextColumn::make('triggered_at'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -159,8 +168,8 @@ class ProductResource extends Resource
         ];
     }
 
-    
-    
+
+
     public static function getPages(): array
     {
         return [
@@ -169,5 +178,5 @@ class ProductResource extends Resource
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }
-  
+
 }

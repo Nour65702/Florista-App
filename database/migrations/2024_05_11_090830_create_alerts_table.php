@@ -19,8 +19,6 @@ return new class extends Migration
             ->cascadeOnDelete()
             ->cascadeOnUpdate();
 
-            $table->integer('min_level');
-            $table->timestamp('triggered_at')->nullable();
             $table->timestamps();
         });
     }

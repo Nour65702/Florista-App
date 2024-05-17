@@ -90,5 +90,5 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName
     // {
     //     return $this->belongsToMany(Role::class);
     // }
-    
+
 }

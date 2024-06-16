@@ -24,14 +24,9 @@ class StoreAddWorkFormRequest extends FormRequest
         return [
             'provider_id' => ['required', 'exists:providers,id'],
             'description' => ['nullable', 'string'],
+            'post_images' => 'nullable|array|max:5', // Allow an array of up to 5 images
+            'post_images.*' => 'image|max:2048',
 
-            'image' => [
-                'required',
-                'image',
-                'dimensions:max_width:3840,max_height:2160',
-                'mimes:png,jpg,gif',
-                'max:2765'
-            ],
         ];
     }
 }

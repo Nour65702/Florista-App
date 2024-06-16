@@ -17,6 +17,9 @@ return new class extends Migration
             $table->foreignId('provider_id')->constrained('providers')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
+                $table->foreignId('order_id')->constrained('orders')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
 
             $table->string('title');
             $table->longText('description');

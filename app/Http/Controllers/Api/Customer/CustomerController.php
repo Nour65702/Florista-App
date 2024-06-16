@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Customer;
 use App\Contracts\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customers\StoreRegisterFormRequest;
+use App\Http\Requests\Customers\UpdateProfileFormRequest;
 use App\Http\Resources\Customers\CustomerResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class CustomerController extends Controller
     {
         $users = User::all();
         return ApiResponse::success([
-            'users' => $users
+            'users' => CustomerResource::collection($users)
         ]);
     }
 
@@ -45,7 +46,7 @@ class CustomerController extends Controller
     {
         $user = User::findOrFail($id);
         return ApiResponse::success([
-            'user' => $user
+            'user' => CustomerResource::make($user)
         ]);
     }
 
@@ -63,15 +64,19 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function updateProfile(StoreRegisterFormRequest $request, string $id)
+    public function updateProfile(UpdateProfileFormRequest $request, string $id)
     {
         $user = User::findOrFail($id);
         $validatedData = $request->validated();
+
+        if ($request->hasFile('user_image')) {
+            $user->addMediaFromRequest('user_image')->toMediaCollection('user_image');
+        }
         $user->update($validatedData);
 
         return ApiResponse::success([
             'message' => 'The Details Update Sucssesfully',
-            'profile' => $user,
+            'profile' => CustomerResource::make($user),
         ]);
     }
 

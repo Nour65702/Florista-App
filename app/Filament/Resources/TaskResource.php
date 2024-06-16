@@ -93,7 +93,7 @@ class TaskResource extends Resource
                     ->numeric()
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('order.user.first_name')
+                TextColumn::make('order.user.name')
                     ->label('From Customer')
                     ->sortable(),
                 TextColumn::make('title')

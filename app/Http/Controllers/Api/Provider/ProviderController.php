@@ -6,6 +6,7 @@ use App\Contracts\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Posts\StoreAddWorkFormRequest;
 use App\Http\Requests\Providers\StoreRegisterFormRequest;
+use App\Http\Requests\Providers\UpdateProfileFormRequest;
 use App\Http\Resources\Providers\PostResource;
 use App\Http\Resources\Providers\ProviderResource;
 use App\Models\Provider;
@@ -20,6 +21,7 @@ class ProviderController extends Controller
     public function index()
     {
         $provider = Provider::all();
+
         return ApiResponse::success([
             'providers' => ProviderResource::collection($provider)
         ]);
@@ -39,10 +41,27 @@ class ProviderController extends Controller
     public function store(StoreAddWorkFormRequest $request)
     {
         $validatedData = $request->validated();
+
+        // Create the work provider record
         $post = WorkProvider::create($validatedData);
 
+        // Handle multiple images upload
+        if ($request->hasFile('post_images')) {
+            foreach ($request->file('post_images') as $image) {
+                $post->addMedia($image)->toMediaCollection('images');
+            }
+        }
+
+        // Retrieve the images URLs
+        $imageUrls = [];
+        foreach ($post->getMedia('images') as $media) {
+            $imageUrl = $media->getUrl();
+            $imageUrl = str_replace('http://localhost:8000', '', $imageUrl);
+            $imageUrls[] = $imageUrl;
+        }
+
         return ApiResponse::success([
-            'post' => PostResource::make($post)
+            'post' => PostResource::make($post),
         ]);
     }
 
@@ -53,7 +72,7 @@ class ProviderController extends Controller
     {
         $provider = Provider::findOrFail($id);
         return ApiResponse::success([
-            'provider' => $provider
+            'provider' => ProviderResource::make($provider)
         ]);
     }
 
@@ -71,10 +90,13 @@ class ProviderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function updateProfile(StoreRegisterFormRequest $request, string $id)
+    public function updateProfile(UpdateProfileFormRequest $request, string $id)
     {
         $provider = Provider::findOrFail($id);
         $validatedData = $request->validated();
+        if ($request->hasFile('profile_image')) {
+            $provider->addMediaFromRequest('profile_image')->toMediaCollection('profile_image');
+        }
         $provider->update($validatedData);
 
 
@@ -90,5 +112,10 @@ class ProviderController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function posts(){
+        $posts = WorkProvider::all();
+        return ApiResponse::success(['posts'=> PostResource::collection($posts)]);
     }
 }

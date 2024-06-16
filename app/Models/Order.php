@@ -24,10 +24,7 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function additions()
-    {
-        return $this->hasMany(Addition::class);
-    }
+   
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
@@ -35,5 +32,10 @@ class Order extends Model
     public function address()
     {
         return $this->hasOne(Address::class);
+    }
+
+    public function orderCustomBouquets()
+    {
+        return $this->hasMany(OrderCustomBouquet::class);
     }
 }

@@ -19,7 +19,6 @@ class ReviewResource extends JsonResource
             'user_id' => $this->user_id,
             'product_id' => $this->product_id,
             'rate' => $this->rate,
-
         ];
     }
 }

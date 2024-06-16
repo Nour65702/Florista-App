@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123456789'),
 
         ]);
-       
+
         $role = Role::create(['name' => 'Admin']);
         $user1->assignRole($role);
 
@@ -41,5 +41,11 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductSeeder::class);
         $this->call(ContactUsSeeder::class);
         $this->call(AdminSeeder::class);
+        $this->call([
+            DesignSeeder::class,
+            ColorSeeder::class,
+            BouquetShapeSeeder::class,
+            AdditionSeeder::class,
+        ]);
     }
 }

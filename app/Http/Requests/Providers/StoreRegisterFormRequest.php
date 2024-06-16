@@ -29,6 +29,7 @@ class StoreRegisterFormRequest extends FormRequest
             'email' => 'required|unique:providers,email|email',
             'phone' => 'required|unique:providers,phone|numeric',
             'password' => 'required|min:6|confirmed',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 

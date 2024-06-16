@@ -8,4 +8,5 @@ Route::prefix('task')->controller(TaskController::class)->group(function () {
     Route::get('all', 'index');
     Route::get('show/{task}', 'show');
     Route::get('my-tasks/{provider}', 'myTasks');
+    Route::put('{task}/complete',  'updateStatus');
 });

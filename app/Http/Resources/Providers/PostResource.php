@@ -14,10 +14,15 @@ class PostResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
+        $imageUrls = $this->media->map(function ($media) {
+            return str_replace('http://localhost:8000', '', $media->getUrl());
+        })->toArray();
+
         return [
             'id' => $this->id,
             'description' => $this->description,
-            'imageUrl' => $this->imageUrl,
+            'imageUrls' => $imageUrls,
         ];
     }
 }

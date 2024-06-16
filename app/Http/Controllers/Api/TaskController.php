@@ -52,9 +52,22 @@ class TaskController extends Controller
     }
 
 
-    public function edit(string $id)
+    public function updateStatus(Request $request, $id)
     {
-        //
+        $task = Task::findOrFail($id);
+
+        // Validate the request
+        $request->validate([
+            'completed' => 'required|boolean',
+        ]);
+
+        // Update task completion status
+        $task->completed = $request->input('completed');
+        $task->save();
+
+        return ApiResponse::success([
+            'task' => TaskResource::make($task)
+        ]);
     }
 
 

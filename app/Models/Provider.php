@@ -45,4 +45,12 @@ class Provider extends User implements HasMedia
     {
         return $this->hasMany(Task::class, 'provider_id');
     }
+
+    public function registerMediaCollections(): void
+    {
+        
+        $this->addMediaCollection('profile_image')
+            ->useDisk('public')
+            ->singleFile();
+    }
 }

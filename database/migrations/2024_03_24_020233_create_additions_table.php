@@ -14,15 +14,13 @@ return new class extends Migration
         Schema::create('additions', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('order_id')->constrained('orders')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
-
             $table->foreignId('type_addition_id')->constrained('type_additions')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
             $table->string('name');
+            $table->string('description');
+            $table->decimal('price', 10, 2);
             $table->timestamps();
         });
     }

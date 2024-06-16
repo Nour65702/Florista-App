@@ -14,7 +14,7 @@ Route::post('register', [RegisterController::class, 'register']);
 Route::post('login', [LoginController::class, 'login']);
 Route::post('request-join', [RequestController::class, 'join']);
 
-Route::prefix('provider')->controller(ProviderController::class)->group(function () {
+Route::controller(ProviderController::class)->group(function () {
     Route::post('add-post', 'store');
     Route::get('all', 'index');
     Route::get('profile/{provider}', 'myProfile');

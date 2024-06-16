@@ -11,18 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bouquet_products', function (Blueprint $table) {
+        Schema::create('user_custom_bouquets', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('product_id')->constrained('products')
+            $table->foreignId('user_id')->constrained('users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->foreignId('bouquet_id')->constrained('bouquets')
+            $table->foreignId('design_id')->constrained('designs')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->integer('quantity');
+            $table->foreignId('color_id')->constrained('colors')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+
+            $table->string('name');
+            $table->decimal('total_price', 10, 2);
             $table->timestamps();
         });
     }
@@ -32,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bouquet_products');
+        Schema::dropIfExists('user_custom_bouquets');
     }
 };

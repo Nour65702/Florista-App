@@ -25,4 +25,10 @@ class OrderItem extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    public function additions()
+    {
+        return $this->belongsToMany(Addition::class, 'order_item_addition')
+                    ->withPivot('quantity');
+    }
 }

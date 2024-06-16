@@ -3,21 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 
-class Addition extends BaseModel
+class Addition extends BaseModel implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
     protected $fillable = [
         'name',
         'type_addition_id',
-        'order_id'
+        'description',
+        'price'
     ];
 
 
-    public function order()
+    public function products()
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsToMany(Product::class, 'addition_products');
     }
 
     public function typeAddition()
@@ -29,5 +32,18 @@ class Addition extends BaseModel
         foreach ($images as $image) {
             $this->images()->create(['image_name' => $image]);
         }
+    }
+    public function userCustomBouquet()
+    {
+        return $this->belongsTo(UserCustomBouquets::class);
+    }
+    public function userCustomBouquetProduct()
+    {
+        return $this->belongsTo(UserCustomBouquetProducts::class, 'bouquet_product_id');
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('addition_image')->singleFile();
     }
 }

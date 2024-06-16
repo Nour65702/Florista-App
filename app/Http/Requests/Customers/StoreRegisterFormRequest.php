@@ -30,6 +30,7 @@ class StoreRegisterFormRequest extends FormRequest
             'email' => 'required|unique:users,email|email',
             'phone' => ['required', 'digits:10', 'string', 'regex:/^[0-9]+$/'],
             'password' => 'required|min:6|confirmed',
+            'user_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ];
     }

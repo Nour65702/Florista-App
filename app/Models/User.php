@@ -66,7 +66,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName
     }
     public function address()
     {
-        return $this->hasOne(Address::class);
+        return $this->hasMany(Address::class);
     }
     public function getFilamentName(): string
     {

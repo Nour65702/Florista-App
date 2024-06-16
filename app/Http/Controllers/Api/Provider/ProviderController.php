@@ -95,6 +95,7 @@ class ProviderController extends Controller
         $provider = Provider::findOrFail($id);
         $validatedData = $request->validated();
         if ($request->hasFile('profile_image')) {
+            $provider->clearMediaCollection('profile_image');
             $provider->addMediaFromRequest('profile_image')->toMediaCollection('profile_image');
         }
         $provider->update($validatedData);
@@ -114,8 +115,9 @@ class ProviderController extends Controller
         //
     }
 
-    public function posts(){
+    public function posts()
+    {
         $posts = WorkProvider::all();
-        return ApiResponse::success(['posts'=> PostResource::collection($posts)]);
+        return ApiResponse::success(['posts' => PostResource::collection($posts)]);
     }
 }

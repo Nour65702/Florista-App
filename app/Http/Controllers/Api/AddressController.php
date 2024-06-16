@@ -31,4 +31,11 @@ class AddressController extends Controller
             'countries' => CountryResource::collection($country)
         ]);
     }
+
+    public function allAddresses(){
+        $address = Address::all();
+        return ApiResponse::success([
+            'address'=> $address
+        ]);
+    }
 }

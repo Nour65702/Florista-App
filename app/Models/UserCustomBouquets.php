@@ -30,10 +30,9 @@ class UserCustomBouquets extends Model
     {
         return $this->belongsTo(Color::class);
     }
-
     public function additions()
     {
-        return $this->hasMany(Addition::class);
+        return $this->belongsToMany(Addition::class, 'addition_user_custom_bouquet')->withPivot('quantity');
     }
     public function orders()
     {
@@ -49,5 +48,4 @@ class UserCustomBouquets extends Model
     {
         return $this->hasMany(UserCustomBouquetProductAddition::class, 'bouquet_product_id');
     }
-
 }

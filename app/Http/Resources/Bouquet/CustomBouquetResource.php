@@ -18,13 +18,11 @@ class CustomBouquetResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'total_price' => $this->total_price,
             'products' => CustomBouquetProductResource::collection($this->products),
             'color' =>  ColorResource::make($this->color),
             'design' =>  DesignResource::make($this->design),
-            'total_price' => $this->total_price,
-            'additions' => AdditionResource::collection($this->userCustomBouquetAdditions->map(function ($addition) {
-                return $addition->addition;
-            })),
+            'additions' => AdditionResource::collection($this->whenLoaded('additions')),
         ];
     }
 }

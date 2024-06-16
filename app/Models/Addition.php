@@ -46,4 +46,9 @@ class Addition extends BaseModel implements HasMedia
     {
         $this->addMediaCollection('addition_image')->singleFile();
     }
+
+    public function userCustomBouquets()
+    {
+        return $this->belongsToMany(UserCustomBouquets::class, 'addition_user_custom_bouquet')->withPivot('quantity');
+    }
 }

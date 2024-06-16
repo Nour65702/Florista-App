@@ -70,6 +70,7 @@ class CustomerController extends Controller
         $validatedData = $request->validated();
 
         if ($request->hasFile('user_image')) {
+            $user->clearMediaCollection('user_image');
             $user->addMediaFromRequest('user_image')->toMediaCollection('user_image');
         }
         $user->update($validatedData);
@@ -77,6 +78,7 @@ class CustomerController extends Controller
         return ApiResponse::success([
             'message' => 'The Details Update Sucssesfully',
             'profile' => CustomerResource::make($user),
+
         ]);
     }
 

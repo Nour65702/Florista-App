@@ -3,12 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
-use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Filament\Resources\OrderResource\RelationManagers\AddressRelationManager;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\User;
-use Filament\Forms;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
@@ -27,14 +24,12 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Number;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\ViewAction;
 
-use function Laravel\Prompts\select;
+
 
 class OrderResource extends Resource
 {
@@ -131,7 +126,22 @@ class OrderResource extends Resource
                                         ->minValue(1)
                                         ->columnSpan(2)
                                         ->reactive()
-                                        ->afterStateUpdated(fn ($state, Set $set, Get $get) => $set('total_amount', $state * $get('unit_amount'))),
+                                        ->afterStateUpdated(fn ($state, Set $set, Get $get) => $set('total_amount', $state * $get('unit_amount')))
+                                        ->live()
+                                        ->afterStateUpdated(function ($state,Get $get) {
+
+                                            $productId = $get('product_id');
+
+                                            if ($productId) {
+
+                                                $product = Product::find($productId);
+
+                                                if ($product && $product->quantity >= $state) {
+                                                    $product->quantity -= $state;
+                                                    $product->save();
+                                                }
+                                            }
+                                        }),
 
                                     TextInput::make('unit_amount')
                                         ->numeric()

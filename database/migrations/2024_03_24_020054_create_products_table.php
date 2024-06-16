@@ -24,12 +24,12 @@ return new class extends Migration
             $table->longText('description');
             $table->string('size');
             $table->integer('rate')->nullable();
+            $table->integer('min_level');
+         
 
             $table->boolean('is_active')->default(true);
             $table->boolean('in_stock')->default(true);
             $table->boolean('on_sale')->default(false);
-            $table->integer('min_level');
-            
             $table->timestamp('triggered_at')->nullable();
             $table->timestamps();
         });

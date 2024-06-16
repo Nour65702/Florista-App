@@ -11,8 +11,7 @@ class Alert extends Model
 
     protected $fillable = [
         'product_id',
-        'min_level',
-        'triggered_at'
+      
     ];
 
     public function product()

@@ -31,6 +31,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Request;
 
 class ProductResource extends Resource
 {
@@ -67,11 +68,9 @@ class ProductResource extends Resource
                             TextInput::make('quantity')
                                 ->required()
                                 ->numeric(),
-
-                            Forms\Components\TextInput::make('min_level')
+                                Forms\Components\TextInput::make('min_level')
                                 ->required()
                                 ->numeric(),
-                            Forms\Components\DateTimePicker::make('triggered_at'),
                         ])->columns(2)
                 ])->columnSpan(2),
                 Group::make()->schema([
@@ -112,7 +111,6 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('collection.name')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('price')
                     ->money()
@@ -130,9 +128,13 @@ class ProductResource extends Resource
                 IconColumn::make('is_active')
                     ->boolean(),
 
-                TextColumn::make('min_level')
+
+                Tables\Columns\TextColumn::make('min_level')
+                    ->numeric()
                     ->sortable(),
-                TextColumn::make('triggered_at'),
+                Tables\Columns\TextColumn::make('triggered_at')
+                    ->dateTime()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -161,6 +163,7 @@ class ProductResource extends Resource
             ]);
     }
 
+  
     public static function getRelations(): array
     {
         return [
@@ -178,5 +181,4 @@ class ProductResource extends Resource
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }
-
 }

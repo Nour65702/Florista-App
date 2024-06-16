@@ -3,19 +3,15 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\AlertResource\Pages;
-use App\Filament\Resources\AlertResource\RelationManagers;
 use App\Models\Alert;
-use App\Models\OrderItem;
 use App\Models\Product;
-use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
 
 class AlertResource extends Resource
 {
@@ -35,7 +31,8 @@ class AlertResource extends Resource
                             ->searchable()
                             ->preload()
                             ->required(),
-                
+                       
+
                     ])->columns(2)
 
             ]);
@@ -46,8 +43,11 @@ class AlertResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('product.name')
+
                     ->numeric()
                     ->sortable(),
+
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -61,7 +61,7 @@ class AlertResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+               
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -76,8 +76,29 @@ class AlertResource extends Resource
             //
         ];
     }
-   
-    
+
+    public static function getNavigationBadge(): ?string
+    {
+
+        $productsToAlert = Product::whereColumn('quantity', '<=', 'min_level')->get();
+
+        $productsCount = $productsToAlert->count();
+
+        if ($productsToAlert->isNotEmpty()) {
+            Alert::truncate();
+            foreach ($productsToAlert as $product) {
+                Alert::create(['product_id' => $product->id]);
+            }
+        }
+
+
+        return (string) $productsCount;
+    }
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+
+        return 'danger';
+    }
 
     public static function getPages(): array
     {

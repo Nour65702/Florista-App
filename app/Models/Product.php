@@ -20,7 +20,9 @@ class Product extends Model implements HasMedia
         'rate',
         'is_active',
         'in_stock',
-        'on_sale'
+        'on_sale',
+        'min_level',
+        'triggered_at'
     ];
 
 
@@ -38,6 +40,11 @@ class Product extends Model implements HasMedia
     {
         return $this->hasMany(OrderItem::class);
     }
+    public function alerts()
+    {
+        return $this->hasMany(Alert::class);
+    }
+
     protected $casts = [
         'size' => 'array',
     ];

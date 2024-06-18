@@ -16,11 +16,6 @@ class UserCustomBouquets extends Model
         return $this->hasMany(UserCustomBouquetProducts::class, 'user_custom_bouquet_id');
     }
 
-    public function shape()
-    {
-        return $this->belongsTo(BouquetShapes::class, 'bouquet_shape_id');
-    }
-
     public function design()
     {
         return $this->belongsTo(Design::class);

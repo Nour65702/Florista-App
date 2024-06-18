@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Providers\StoreRegisterFormRequest;
 use App\Http\Resources\Providers\ProviderResource;
 use App\Models\Provider;
-
+use App\Models\ProviderLicence;
 
 class RegisterController extends Controller
 {
@@ -18,6 +18,10 @@ class RegisterController extends Controller
         if ($request->hasFile('profile_image')) {
             $user->addMediaFromRequest('profile_image')->toMediaCollection('profile_image');
         }
+        ProviderLicence::create([
+            'provider_id' => $user->id,
+            'is_active' => false, 
+        ]);
         $token = $user->createToken('provider_token')->accessToken;
         return ApiResponse::success([
             'provider' => ProviderResource::make($user),

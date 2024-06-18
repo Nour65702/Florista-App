@@ -44,7 +44,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             DesignSeeder::class,
             ColorSeeder::class,
-            BouquetShapeSeeder::class,
             AdditionSeeder::class,
         ]);
     }

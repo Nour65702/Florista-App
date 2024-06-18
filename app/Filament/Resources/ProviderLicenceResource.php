@@ -3,20 +3,17 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProviderLicenceResource\Pages;
-use App\Filament\Resources\ProviderLicenceResource\RelationManagers;
-use App\Models\Provider;
 use App\Models\ProviderLicence;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Support\View\Components\Modal;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\ButtonAction;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
 
 class ProviderLicenceResource extends Resource
 {
@@ -29,8 +26,6 @@ class ProviderLicenceResource extends Resource
 
 
         return $form;
-
-
     }
 
     public static function table(Table $table): Table
@@ -39,13 +34,16 @@ class ProviderLicenceResource extends Resource
         $providerIdValue = $loggedInUserId ? (string) $loggedInUserId : '';
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('provider_id')
+                Tables\Columns\TextColumn::make('provider.name')
                     ->numeric()
                     ->sortable()
                     ->default($providerIdValue)
                     ->disabled($loggedInUserId ? true : false),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
+                TextColumn::make('provider.email')
+                    ->label('Provider Email'),
+                IconColumn::make('is_active')
+                    ->boolean()
+                    ->label('Active Status'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -59,15 +57,24 @@ class ProviderLicenceResource extends Resource
                 //
             ])
             ->actions([
-                EditAction::make(),
+                ActionGroup::make([
+                    EditAction::make(),
+                ]),
                 Action::make('Accept')
-                ->button()
-               // ->onClick(fn ($record) => $record->update(['is_active' => true]))
-                ->visible(fn ($record) => !$record->is_active),
-            Action::make('Reject')
-                ->button()
-               // ->onClick(fn ($record) => $record->delete())
-                ->visible(fn ($record) => !$record->is_active),
+                    ->label('Accept')
+                    ->button()
+                    ->action(function ($record) {
+                        $record->update(['is_active' => true]);
+                    })
+                    ->visible(fn ($record) => !$record->is_active),
+                Action::make('Reject')
+                    ->label('Reject')
+                    ->button()
+                    ->color('danger')
+                    ->action(function ($record) {
+                        $record->delete();
+                    })
+                    ->visible(fn ($record) => !$record->is_active),
 
 
             ])
@@ -77,8 +84,6 @@ class ProviderLicenceResource extends Resource
                 ]),
 
             ]);
-
-
     }
 
     public static function getRelations(): array

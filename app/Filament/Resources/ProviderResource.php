@@ -3,13 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProviderResource\Pages;
-use App\Filament\Resources\ProviderResource\RelationManagers;
 use App\Filament\Resources\ProviderResource\RelationManagers\PostsRelationManager;
 use App\Filament\Resources\ProviderResource\RelationManagers\TasksRelationManager;
 use App\Models\Provider;
-use Filament\Forms;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -19,12 +15,10 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-
-
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
 class ProviderResource extends Resource
 {
@@ -40,7 +34,6 @@ class ProviderResource extends Resource
                 Section::make('Provider Details')
                     ->schema([
 
-                       
                         TextInput::make('name')
                             ->required()
                             ->maxLength(255),
@@ -58,7 +51,7 @@ class ProviderResource extends Resource
                             ->required()
                             ->numeric()
                             ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
-                            SpatieMediaLibraryFileUpload::make('avatar')
+                        SpatieMediaLibraryFileUpload::make('profile_image')
                     ])->columns(3),
             ]);
     }
@@ -67,9 +60,7 @@ class ProviderResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('profile_image')
-                    ->label('Profile Image')
-                    ->circular(),
+                SpatieMediaLibraryImageColumn::make('profile_image'),
                 TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
@@ -81,7 +72,6 @@ class ProviderResource extends Resource
                 TextColumn::make('phone')
                     ->numeric()
                     ->sortable(),
-
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

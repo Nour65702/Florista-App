@@ -53,4 +53,19 @@ class Provider extends User implements HasMedia
             ->useDisk('public')
             ->singleFile();
     }
+
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
+    }
+
+    public function leaves()
+    {
+        return $this->hasMany(Leave::class);
+    }
+
+    public function salaries()
+    {
+        return $this->hasMany(Salary::class);
+    }
 }

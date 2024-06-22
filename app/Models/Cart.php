@@ -20,4 +20,8 @@ class Cart extends Model
     {
         return $this->belongsToMany(UserCustomBouquets::class, 'cart_user_custom_bouquets', 'cart_id', 'user_custom_bouquet_id');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -4,21 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Salary extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $fillable = [
-        'employee_id',
+        
         'pay_date',
         'amount',
-        'provider_id'
     ];
 
-    public function employee()
+    public function workInfo()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(WorkInfo::class);
     }
 
     public function provider()

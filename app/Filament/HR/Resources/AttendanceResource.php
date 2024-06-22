@@ -6,9 +6,18 @@ use App\Filament\HR\Resources\AttendanceResource\Pages;
 use App\Filament\HR\Resources\AttendanceResource\RelationManagers;
 use App\Models\Attendance;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -18,21 +27,29 @@ class AttendanceResource extends Resource
     protected static ?string $model = Attendance::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Permanence Monitoring';
+    protected static ?int $navigationSort = 3;
+
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('employee_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('provider_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\DatePicker::make('date')
-                    ->required(),
-                Forms\Components\TextInput::make('check_in'),
-                Forms\Components\TextInput::make('check_out'),
+                Section::make('Attendance')
+                    ->schema([
+                        Select::make('employee_id')
+                            ->relationship(name: 'employee', titleAttribute: 'first_name')
+                            ->searchable()
+                            ->preload()
+                            ->searchable(),
+                        DatePicker::make('date')
+                            ->required(),
+                        TextInput::make('check_in'),
+                        TextInput::make('check_out'),
+
+                    ])->columns(2)
+
             ]);
     }
 
@@ -40,18 +57,16 @@ class AttendanceResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('employee_id')
+                TextColumn::make('employee.first_name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('provider_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('date')
+
+                TextColumn::make('date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('check_in'),
-                Tables\Columns\TextColumn::make('check_out'),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('check_in'),
+                TextColumn::make('check_out'),
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -64,7 +79,11 @@ class AttendanceResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    EditAction::make(),
+                    ViewAction::make(),
+                    DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

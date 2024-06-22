@@ -20,16 +20,13 @@ return new class extends Migration
             $table->foreignId('employee_id')->constrained('employees')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-                
-            $table->foreignId('provider_id')->constrained('providers')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
 
             $table->date('from_date');
             $table->date('to_date');
             $table->text('reason')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
+            $table->softDeletes(); 
         });
     }
 

@@ -19,7 +19,7 @@ class CategoryResource extends JsonResource
             'name' => $this->name,
             'main category' => $this->parent_id,
             'sub category' => CategoryResource::collection($this->whenLoaded('children')),
-            'collections' => CollectionResource::collection($this->whenLoaded('collections'))
+            'collections' => CollectionResource::collection($this->collections)
         ];
     }
 }

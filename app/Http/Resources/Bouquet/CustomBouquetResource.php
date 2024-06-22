@@ -22,7 +22,7 @@ class CustomBouquetResource extends JsonResource
             'products' => CustomBouquetProductResource::collection($this->products),
             'color' =>  ColorResource::make($this->color),
             'design' =>  DesignResource::make($this->design),
-            'additions' => AdditionResource::collection($this->whenLoaded('additions')),
+            'additions' => AdditionResource::collection($this->additions),
         ];
     }
 }

@@ -117,4 +117,62 @@ class ProductController extends Controller
             'additions' => AdditionResource::collection($additions)
         ]);
     }
+
+
+    public function updateAddition(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'type_addition_id' => 'sometimes|required|exists:type_additions,id',
+            'description' => 'sometimes|required|string|max:255',
+            'price' => 'sometimes|required|numeric',
+            'addition_image' => 'sometimes|image|max:2048', // Validate the image if provided
+        ]);
+    
+        $addition = Addition::findOrFail($id);
+    
+        // Update the addition details
+        if ($request->has('name')) {
+            $addition->name = $request->name;
+        }
+        if ($request->has('type_addition_id')) {
+            $addition->type_addition_id = $request->type_addition_id;
+        }
+        if ($request->has('description')) {
+            $addition->description = $request->description;
+        }
+        if ($request->has('price')) {
+            $addition->price = $request->price;
+        }
+    
+        // Check if a new image is being uploaded
+        if ($request->hasFile('addition_image')) {
+            // Remove old image if exists
+            // $addition->clearMediaCollection('images');
+            
+            // Add new image
+            $addition->addMedia($request->file('addition_image'))->toMediaCollection('images');
+            
+            // Retrieve the URL of the newly added image
+            $imageUrl = $addition->getFirstMediaUrl('images');
+        } else {
+            // If no new image was uploaded, retain the existing image URL
+            $imageUrl = $addition->getFirstMediaUrl('images');
+        }
+    
+        $addition->save();
+    
+        return ApiResponse::success([
+            'message' => 'Addition updated successfully',
+            'addition' => [
+                'id' => $addition->id,
+                'type_addition_id' => $addition->type_addition_id,
+                'name' => $addition->name,
+                'description' => $addition->description,
+                'price' => $addition->price,
+                'image_url' => $imageUrl,
+            ],
+        ]);
+    }
+    
 }

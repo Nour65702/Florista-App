@@ -18,7 +18,7 @@ class CollectionResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'products' => ProductResource::collection($this->whenLoaded('products')),
+            'products' => ProductResource::collection($this->products),
         ];
     }
 }

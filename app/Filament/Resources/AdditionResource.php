@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Filament\HR\Resources;
+namespace App\Filament\Resources;
 
-use App\Filament\HR\Resources\WorkExperienceResource\Pages;
-use App\Filament\HR\Resources\WorkExperienceResource\RelationManagers;
-use App\Models\WorkExperience;
+use App\Filament\Resources\AdditionResource\Pages;
+use App\Filament\Resources\AdditionResource\RelationManagers;
+use App\Models\Addition;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -13,9 +14,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class WorkExperienceResource extends Resource
+class AdditionResource extends Resource
 {
-    protected static ?string $model = WorkExperience::class;
+    protected static ?string $model = Addition::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,22 +24,22 @@ class WorkExperienceResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('employee_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('provider_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\DatePicker::make('from_date')
-                    ->required(),
-                Forms\Components\DatePicker::make('to_date')
-                    ->required(),
-                Forms\Components\TextInput::make('company')
+                
+                    Select::make('type_addition_id')
+                    ->label('Type')
+                    ->relationship(name: 'typeAddition', titleAttribute: 'name')
+                    ->searchable()
+                    ->preload(),
+                Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('position')
+                Forms\Components\TextInput::make('description')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('price')
+                    ->required()
+                    ->numeric()
+                    ->prefix('$'),
             ]);
     }
 
@@ -46,22 +47,16 @@ class WorkExperienceResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('employee_id')
+                Tables\Columns\TextColumn::make('type_addition_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('provider_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('from_date')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('to_date')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('company')
+                Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('position')
+                Tables\Columns\TextColumn::make('description')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('price')
+                    ->money()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -94,9 +89,9 @@ class WorkExperienceResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListWorkExperiences::route('/'),
-            'create' => Pages\CreateWorkExperience::route('/create'),
-            'edit' => Pages\EditWorkExperience::route('/{record}/edit'),
+            'index' => Pages\ListAdditions::route('/'),
+            'create' => Pages\CreateAddition::route('/create'),
+            'edit' => Pages\EditAddition::route('/{record}/edit'),
         ];
     }
 }

@@ -48,7 +48,7 @@ class Provider extends User implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        
+
         $this->addMediaCollection('profile_image')
             ->useDisk('public')
             ->singleFile();
@@ -59,13 +59,8 @@ class Provider extends User implements HasMedia
         return $this->hasMany(Employee::class);
     }
 
-    public function leaves()
+    public function licence()
     {
-        return $this->hasMany(Leave::class);
-    }
-
-    public function salaries()
-    {
-        return $this->hasMany(Salary::class);
+        return $this->hasOne(ProviderLicence::class);
     }
 }

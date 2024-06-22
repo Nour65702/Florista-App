@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Filament\HR\Resources;
+namespace App\Filament\Resources;
 
-use App\Filament\HR\Resources\SalaryResource\Pages;
-use App\Filament\HR\Resources\SalaryResource\RelationManagers;
-use App\Models\Salary;
+use App\Filament\Resources\AdditionProductResource\Pages;
+use App\Filament\Resources\AdditionProductResource\RelationManagers;
+use App\Models\AdditionProduct;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -13,9 +14,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class SalaryResource extends Resource
+class AdditionProductResource extends Resource
 {
-    protected static ?string $model = Salary::class;
+    protected static ?string $model = AdditionProduct::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,17 +24,18 @@ class SalaryResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('employee_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('provider_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\DatePicker::make('pay_date')
-                    ->required(),
-                Forms\Components\TextInput::make('amount')
-                    ->required()
-                    ->numeric(),
+              
+                    Select::make('product_id')
+                    ->label('Product')
+                    ->relationship(name: 'product', titleAttribute: 'name')
+                    ->searchable()
+                    ->preload(),
+                    Select::make('addition_id')
+                    ->label('Type')
+                    ->relationship(name: 'addition', titleAttribute: 'name')
+                    ->searchable()
+                    ->preload(),
+            
             ]);
     }
 
@@ -41,16 +43,10 @@ class SalaryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('employee_id')
+                Tables\Columns\TextColumn::make('product_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('provider_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('pay_date')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('amount')
+                Tables\Columns\TextColumn::make('addition_id')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -85,9 +81,9 @@ class SalaryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSalaries::route('/'),
-            'create' => Pages\CreateSalary::route('/create'),
-            'edit' => Pages\EditSalary::route('/{record}/edit'),
+            'index' => Pages\ListAdditionProducts::route('/'),
+            'create' => Pages\CreateAdditionProduct::route('/create'),
+            'edit' => Pages\EditAdditionProduct::route('/{record}/edit'),
         ];
     }
 }

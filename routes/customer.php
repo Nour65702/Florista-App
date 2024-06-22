@@ -36,4 +36,5 @@ Route::middleware('auth:user')->group(function () {
 
 });
   Route::post('store',[BouquetController::class, 'storeDesgin']);
+
   

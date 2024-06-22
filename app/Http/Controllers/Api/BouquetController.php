@@ -133,6 +133,8 @@ class BouquetController extends Controller
             'products' => 'required|array',
             'products.*.product_id' => 'required|exists:products,id',
             'products.*.quantity' => 'required|integer|min:1',
+            'products.*.size' => 'required|array',
+            'products.*.size.*' => 'string|in:small,medium,big',
             'additions' => 'array',
             'additions.*.addition_id' => 'exists:additions,id',
             'additions.*.quantity' => 'integer|min:1',
@@ -145,7 +147,7 @@ class BouquetController extends Controller
 
             // Create the bouquet
             $bouquet = UserCustomBouquets::create([
-                'user_id' => auth()->user()->id, // Use authenticated user's ID
+                'user_id' => auth()->user()->id,
                 'name' => $validatedData['name'],
                 'total_price' => 0, // Temporary value, will be updated later
                 'design_id' => $validatedData['design_id'],
@@ -164,6 +166,8 @@ class BouquetController extends Controller
                     'user_custom_bouquet_id' => $bouquet->id,
                     'product_id' => $productData['product_id'],
                     'quantity' => $productData['quantity'],
+                    'size' => $productData['size'],
+
                 ]);
             }
 

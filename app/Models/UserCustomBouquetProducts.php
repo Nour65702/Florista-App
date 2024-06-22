@@ -9,8 +9,11 @@ class UserCustomBouquetProducts extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_custom_bouquet_id', 'product_id', 'quantity'];
+    protected $fillable = ['user_custom_bouquet_id', 'product_id', 'quantity','size'];
     
+    protected $casts = [
+        'size' => 'array',
+    ];
     public function product()
     {
         return $this->belongsTo(Product::class);

@@ -18,7 +18,7 @@ class AdditionResource extends JsonResource
         $imageUrl = null;
         
         if ($this->media && $this->media->isNotEmpty()) {
-            $imageUrl = $this->media->first()->getUrl(); // Adjust this according to your storage setup
+            $imageUrl = $this->media->first()->getUrl(); 
             $imageUrl = str_replace('http://localhost:8000', '', $imageUrl);
         }
         return [

@@ -17,7 +17,7 @@ class CartResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            'user_name' => $this->user->name,
             'items' => CartItemResource::collection($this->whenLoaded('items')),
             'custom_bouquets' => CustomBouquetResource::collection($this->customBouquets),
 

@@ -3,48 +3,111 @@
 namespace App\Filament\HR\Resources;
 
 use App\Filament\HR\Resources\WorkInfoResource\Pages;
-use App\Filament\HR\Resources\WorkInfoResource\RelationManagers;
 use App\Models\WorkInfo;
-use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
 
 class WorkInfoResource extends Resource
 {
     protected static ?string $model = WorkInfo::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-folder';
+    protected static ?string $navigationGroup = 'Employee Management';
+    public static ?string $label = 'Work Information';
+    protected static ?int $navigationSort = 2;
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('employee_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('provider_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('department_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('country_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('city')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('business_email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('business_number')
-                    ->numeric()
-                    ->default(null),
+                Group::make()->schema([
+                    Section::make('Work Informations')
+                        ->schema([
+                            Select::make('employee_id')
+                                ->relationship(name: 'employee', titleAttribute: 'first_name')
+                                ->searchable()
+                                ->preload(),
+
+                            Select::make('department_id')
+                                ->relationship(name: 'department', titleAttribute: 'name')
+                                ->searchable()
+                                ->preload(),
+                            Select::make('job_type_id')
+                                ->relationship(name: 'jobType', titleAttribute: 'name')
+                                ->searchable()
+                                ->preload(),
+                            Select::make('job_level_id')
+                                ->relationship(name: 'jobLevel', titleAttribute: 'name')
+                                ->searchable()
+                                ->preload(),
+                            Select::make('country_id')
+                                ->relationship(name: 'country', titleAttribute: 'name')
+                                ->searchable()
+                                ->preload(),
+                            TextInput::make('city')
+                                ->required()
+                                ->maxLength(255),
+                            TextInput::make('business_email')
+                                ->email()
+                                ->required()
+                                ->maxLength(255),
+                            TextInput::make('business_number')
+                                ->required()
+                                ->tel()
+                                ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
+                        ])->columns(2),
+
+                    Section::make('Work Experiences')
+                        ->schema([
+                            Repeater::make('experiences')
+                                ->relationship()
+                                ->schema([
+
+                                    DatePicker::make('from_date')
+                                        ->required(),
+                                    DatePicker::make('to_date')
+                                        ->required(),
+                                    TextInput::make('company')
+                                        ->required()
+                                        ->maxLength(255),
+                                    TextInput::make('position')
+                                        ->required()
+                                        ->maxLength(255),
+                                ])->columns(2)
+                        ]),
+
+
+                    Section::make('Salary Informations')
+                        ->schema([
+                            Repeater::make('salary')
+                                ->relationship()
+                                ->schema([
+                                    
+                                    DatePicker::make('pay_date')
+                                        ->required(),
+                                    TextInput::make('amount')
+                                        ->required()
+                                        ->numeric(),
+
+                                ])->columns(2)
+                        ])
+
+                ])->columnSpanFull(),
             ]);
     }
 
@@ -52,30 +115,28 @@ class WorkInfoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('employee_id')
+                TextColumn::make('employee.first_name')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('department.name')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('country.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('provider_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('department_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('country_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('city')
+                TextColumn::make('city')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('business_email')
+                TextColumn::make('business_email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('business_number')
+                TextColumn::make('business_number')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -84,7 +145,12 @@ class WorkInfoResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    EditAction::make(),
+                    ViewAction::make(),
+                    DeleteAction::make(),
+                ])
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

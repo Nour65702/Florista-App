@@ -40,7 +40,17 @@ class ProviderController extends Controller
      */
     public function store(StoreAddWorkFormRequest $request)
     {
+        $providerId = auth()->id(); // Assuming the provider is authenticated
+        $provider = Provider::with('licence')->findOrFail($providerId);
+
+        // Check if the provider is active
+        if (!$provider->licence || $provider->licence->is_active !== 1) {
+            return ApiResponse::error('You are not authorized to add a post. Please wait for admin approval.', 403);
+        }
+
         $validatedData = $request->validated();
+        $validatedData['provider_id'] = $providerId;
+
 
         // Create the work provider record
         $post = WorkProvider::create($validatedData);
@@ -70,7 +80,7 @@ class ProviderController extends Controller
      */
     public function show(string $id)
     {
-        $provider = Provider::findOrFail($id);
+        $provider = Provider::with('licence')->findOrFail($id);
         return ApiResponse::success([
             'provider' => ProviderResource::make($provider)
         ]);

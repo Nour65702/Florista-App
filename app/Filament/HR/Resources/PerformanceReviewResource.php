@@ -6,9 +6,19 @@ use App\Filament\HR\Resources\PerformanceReviewResource\Pages;
 use App\Filament\HR\Resources\PerformanceReviewResource\RelationManagers;
 use App\Models\PerformanceReview;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -18,26 +28,36 @@ class PerformanceReviewResource extends Resource
     protected static ?string $model = PerformanceReview::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Reviews & Ratings ';
+    protected static ?int $navigationSort = 2;
+
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('employee_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('provider_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\Textarea::make('review')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('rating')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\DatePicker::make('review_date')
-                    ->required(),
+
+                Section::make('Review Details')
+                    ->schema([
+                        Select::make('employee_id')
+                            ->relationship(name: 'employee', titleAttribute: 'first_name')
+                            ->searchable()
+                            ->preload()
+                            ->searchable(),
+
+
+                        TextInput::make('rating')
+                            ->required()
+                            ->numeric()
+                            ->default(0),
+                        DatePicker::make('review_date')
+                            ->required(),
+                        Textarea::make('review')
+                            ->required()
+                            ->columnSpanFull(),
+                    ])->columns(2)
+
             ]);
     }
 
@@ -45,23 +65,23 @@ class PerformanceReviewResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('employee_id')
+                TextColumn::make('employee.first_name')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('rating')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('provider_id')
-                    ->numeric()
+                TextColumn::make('review')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rating')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('review_date')
+                TextColumn::make('review_date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -70,7 +90,12 @@ class PerformanceReviewResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    EditAction::make(),
+                    ViewAction::make(),
+                    DeleteAction::make(),
+                ])
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -11,16 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('performance_reviews', function (Blueprint $table) {
+        Schema::create('job_levels', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('employee_id')->constrained('employees')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
-
-            $table->text('review');
-            $table->unsignedTinyInteger('rating')->default(0);
-            $table->date('review_date');
+            $table->string('name');
             $table->timestamps();
             $table->softDeletes(); 
         });
@@ -31,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('performance_reviews');
+        Schema::dropIfExists('job_levels');
     }
 };

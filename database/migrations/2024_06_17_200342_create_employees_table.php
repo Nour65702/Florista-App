@@ -29,6 +29,7 @@ return new class extends Migration
             $table->integer('phone')->nullable();
             $table->enum('gender', ['female', 'male'])->default('male');
             $table->timestamps();
+            $table->softDeletes(); 
         });
     }
 

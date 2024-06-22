@@ -19,3 +19,4 @@ Route::prefix('product')->controller(ReviewController::class)->group(function ()
 Route::post('addition',[ProductController::class, 'storeAddition']);
 Route::get('all-additions',[ProductController::class, 'getAllAdditions']);
 Route::post('products',[ProductController::class, 'store']);
+Route::put('/additions/{id}', [ProductController::class, 'updateAddition']);

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\HR\Resources\SalaryResource\Pages;
+namespace App\Filament\Resources\AdditionResource\Pages;
 
-use App\Filament\HR\Resources\SalaryResource;
+use App\Filament\Resources\AdditionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListSalaries extends ListRecords
+class ListAdditions extends ListRecords
 {
-    protected static string $resource = SalaryResource::class;
+    protected static string $resource = AdditionResource::class;
 
     protected function getHeaderActions(): array
     {

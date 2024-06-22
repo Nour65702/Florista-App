@@ -22,6 +22,7 @@ return new class extends Migration
                 ->cascadeOnUpdate();
 
             $table->integer('quantity');
+            $table->json('size');
             $table->timestamps();
         });
     }

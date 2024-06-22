@@ -68,7 +68,7 @@ class ProductResource extends Resource
                             TextInput::make('quantity')
                                 ->required()
                                 ->numeric(),
-                                Forms\Components\TextInput::make('min_level')
+                            TextInput::make('min_level')
                                 ->required()
                                 ->numeric(),
                         ])->columns(2)

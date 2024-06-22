@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('type');
             $table->longText('descreption');
             $table->timestamps();
+            $table->softDeletes(); 
         });
     }
 

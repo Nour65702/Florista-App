@@ -3,50 +3,107 @@
 namespace App\Filament\HR\Resources;
 
 use App\Filament\HR\Resources\EmployeeResource\Pages;
-use App\Filament\HR\Resources\EmployeeResource\RelationManagers;
 use App\Models\Employee;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Repeater;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
 
 class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-user-group';
+    protected static ?string $navigationGroup = 'Employee Management';
+    protected static ?int $navigationSort = 1;
+
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('provider_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('first_name')
-                    ->maxLength(255)
-                    ->default(null),
-                Forms\Components\TextInput::make('last_name')
-                    ->maxLength(255)
-                    ->default(null),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DatePicker::make('date_of_birth'),
-                Forms\Components\DatePicker::make('date_of_joining'),
-                Forms\Components\TextInput::make('phone')
-                    ->tel()
-                    ->numeric()
-                    ->default(null),
-                Forms\Components\TextInput::make('gender')
-                    ->required(),
+                Group::make()->schema([
+                    Section::make('Employee Info')
+
+                        ->schema([
+                            Select::make('user_id')
+                                ->relationship(name: 'user', titleAttribute: 'name')
+                                ->searchable()
+                                ->preload()
+                                ->default(null),
+                            Select::make('provider_id')
+                                ->relationship(name: 'provider', titleAttribute: 'name')
+                                ->searchable()
+                                ->preload()
+                                ->default(null),
+
+                            TextInput::make('first_name')
+                                ->required()
+                                ->maxLength(255),
+                            TextInput::make('last_name')
+                                ->required()
+                                ->maxLength(255),
+                            TextInput::make('email')
+                                ->email()
+                                ->required()
+                                ->maxLength(255),
+                            DatePicker::make('date_of_birth'),
+                            DatePicker::make('date_of_joining'),
+                            TextInput::make('phone')
+                                ->required()
+                                ->tel()
+                                ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
+                            Select::make('gender')
+                                ->options([
+                                    'female' => 'Female',
+                                    'male' => 'Male'
+                                ])
+                                ->required()
+
+                        ])->columns(3),
+                    Section::make('Employee Address')
+                        ->schema([
+                            Repeater::make('address')
+                                ->relationship()
+                                ->schema([
+                                    TextInput::make('city')
+                                        ->required()
+                                        ->maxLength(255)
+                                        ->columnSpan(5),
+
+                                    Select::make('country_id')
+                                        ->relationship(name: 'country', titleAttribute: 'name')
+                                        ->searchable()
+                                        ->preload()
+                                        ->required()
+                                        ->columnSpan(5),
+                                    Textarea::make('line_one')
+                                        ->required()
+                                        ->columnSpan(5),
+                                    Textarea::make('line_two')
+                                        ->columnSpan(5)
+                                        ->default(null),
+                                    Textarea::make('street')
+                                        ->required()
+                                        ->columnSpanFull(),
+                                ])->columns(10)
+
+                        ])
+                ])->columnSpanFull(),
             ]);
     }
 
@@ -54,33 +111,35 @@ class EmployeeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
+                TextColumn::make('user.name')
+                    ->label('User')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('provider_id')
-                    ->numeric()
+                TextColumn::make('provider.name')
+                    ->label('Provider')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('first_name')
+                TextColumn::make('first_name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('last_name')
+                TextColumn::make('last_name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('date_of_birth')
+                TextColumn::make('date_of_birth')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('date_of_joining')
+                TextColumn::make('date_of_joining')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('phone')
+                TextColumn::make('phone')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('gender'),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('gender'),
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -89,7 +148,12 @@ class EmployeeResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    EditAction::make(),
+                    ViewAction::make(),
+                    DeleteAction::make()
+                ]),
+              
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

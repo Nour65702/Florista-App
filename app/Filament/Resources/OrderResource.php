@@ -128,7 +128,7 @@ class OrderResource extends Resource
                                         ->reactive()
                                         ->afterStateUpdated(fn ($state, Set $set, Get $get) => $set('total_amount', $state * $get('unit_amount')))
                                         ->live()
-                                        ->afterStateUpdated(function ($state,Get $get) {
+                                        ->afterStateUpdated(function ($state, Get $get) {
 
                                             $productId = $get('product_id');
 

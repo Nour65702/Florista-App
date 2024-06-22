@@ -36,17 +36,3 @@ Route::prefix('v1')->group(function () use ($dev_path) {
 
 });
 
-Route::post('test-image', function (Request $request) {
-    // $user = User::latest()->first();
-    // $user->addMedia($request->file)->toMediaCollection('user-profile');
-    // $user->addMedia($request->file)->toMediaCollection('user-image');
-    // return $user->getFirstMediaUrl('user-image');
-    // return $user->getFirstMediaUrl('user-profile');
-
-
-    $user = Provider::latest()->first();
-    // $user->addMedia($request->file)->toMediaCollection();
-    // $user->addMedia($request->file)->toMediaCollection('user-image');
-    return $user->getFirstMediaUrl();
-    // return $user->getFirstMediaUrl('user-profile');
-});

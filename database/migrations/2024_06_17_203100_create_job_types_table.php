@@ -13,17 +13,9 @@ return new class extends Migration
     {
         Schema::create('job_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained('employees')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
-
-            $table->foreignId('provider_id')->constrained('providers')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
-                
             $table->string('name');
-
             $table->timestamps();
+            $table->softDeletes(); 
         });
     }
 

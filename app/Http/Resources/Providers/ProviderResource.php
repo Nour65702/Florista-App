@@ -16,7 +16,7 @@ class ProviderResource extends JsonResource
     public function toArray(Request $request): array
     {
         $imageUrl = null;
-        
+
         if ($this->media && $this->media->isNotEmpty()) {
             $imageUrl = $this->media->first()->getUrl(); // Adjust this according to your storage setup
             $imageUrl = str_replace('http://localhost:8000', '', $imageUrl);
@@ -27,6 +27,7 @@ class ProviderResource extends JsonResource
             'email' => $this->email,
             'phone' => $this->phone,
             'profile_image_url' => $imageUrl,
+            'is_active' => $this->licence ? $this->licence->is_active : null,
             'posts' => PostResource::collection($this->whenLoaded('posts')),
             'tasks' => TaskResource::collection($this->whenLoaded('tasks'))
 

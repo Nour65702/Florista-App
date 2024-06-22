@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Leave extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $fillable = [
         'employee_id',
@@ -16,7 +17,7 @@ class Leave extends Model
         'to_date',
         'reason',
         'status',
-        'provider_id'
+       
     ];
 
     public function employee()
@@ -31,6 +32,6 @@ class Leave extends Model
 
     public function leaveType()
     {
-        return $this->belongsTo(LeaveType::class);
+        return $this->belongsTo(LeaveType::class,'type_id');
     }
 }

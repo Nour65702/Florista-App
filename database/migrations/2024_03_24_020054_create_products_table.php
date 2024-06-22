@@ -23,7 +23,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->integer('quantity');
             $table->longText('description');
-            $table->string('size');
+            $table->json('size');
             $table->integer('rate')->nullable();
             $table->integer('min_level')->default(0);
          

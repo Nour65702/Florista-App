@@ -27,6 +27,7 @@ return new class extends Migration
             $table->text('line_two');
             $table->text('street');
             $table->timestamps();
+            $table->softDeletes(); 
         });
     }
 

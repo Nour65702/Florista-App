@@ -43,7 +43,7 @@ class CategoryResource extends Resource
                 Section::make([
                     Grid::make()
                         ->schema([
-                            Forms\Components\TextInput::make('name')
+                           TextInput::make('name')
                                 ->required()
                                 ->maxLength(255)
                                 ->unique(Category::class, 'name', ignoreRecord: true),
@@ -56,9 +56,7 @@ class CategoryResource extends Resource
                             Toggle::make('is_active')
                                 ->required()
                                 ->default(true),
-                            // FileUpload::make('image')
-                            //     ->image()
-                            //     ->directory('categories')
+                            
                         ])
                 ])
 

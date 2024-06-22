@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WorkExperience extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $fillable = [
-        'employee_id',
-        'provider_id',
+       
         'from_date',
         'to_date',
         'company',
@@ -23,8 +23,8 @@ class WorkExperience extends Model
         return $this->belongsTo(Employee::class);
     }
 
-    public function provider()
+    public function workInfo()
     {
-        return $this->belongsTo(Provider::class);
+        return $this->belongsTo(WorkInfo::class);
     }
 }

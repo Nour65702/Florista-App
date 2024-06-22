@@ -6,9 +6,21 @@ use App\Filament\HR\Resources\LeaveResource\Pages;
 use App\Filament\HR\Resources\LeaveResource\RelationManagers;
 use App\Models\Leave;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\SelectColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -18,28 +30,65 @@ class LeaveResource extends Resource
     protected static ?string $model = Leave::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Vacations';
+    protected static ?int $navigationSort = 4;
+
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('type_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('employee_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('provider_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\DatePicker::make('from_date')
-                    ->required(),
-                Forms\Components\DatePicker::make('to_date')
-                    ->required(),
-                Forms\Components\Textarea::make('reason')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('status')
-                    ->required(),
+                Group::make()
+                    ->schema([
+                        Section::make('Leave Information')
+                            ->schema([
+                                Select::make('employee_id')
+                                    ->relationship(name: 'employee', titleAttribute: 'first_name')
+                                    ->searchable()
+                                    ->preload(),
+                                Select::make('type_id')
+                                    ->relationship(name: 'leaveType', titleAttribute: 'type')
+                                    ->searchable()
+                                    ->preload(),
+
+                            ])->columns(2),
+
+                        Section::make('Leave Date')
+                            ->schema([
+                                DatePicker::make('from_date')
+                                    ->required(),
+                                DatePicker::make('to_date')
+                                    ->required(),
+                            ])->columns(2),
+
+                        Section::make('Leave Reason')
+                            ->schema([
+                                Textarea::make('reason')
+                                    ->columnSpanFull(),
+                                ToggleButtons::make('status')
+                                    ->inline()
+                                    ->default('pending')
+                                    ->required()
+                                    ->options([
+                                        'pending' => 'Pending',
+                                        'approved' => 'Approved',
+                                        'rejected' => 'Rejected',
+                                    ])->columnSpan(2)
+                                    ->colors([
+                                        'pending' => 'info',
+                                        'approved' => 'success',
+                                        'rejected' => 'danger',
+                                    ])
+                                    ->icons([
+                                        'pending' => 'heroicon-m-sparkles',
+                                        'approved' => 'heroicon-m-arrow-path',
+                                        'rejected' => 'heroicon-m-x-circle',
+
+                                    ]),
+                            ])
+                    ])->columnSpanFull()
+
             ]);
     }
 
@@ -47,27 +96,31 @@ class LeaveResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('type_id')
-                    ->numeric()
+                TextColumn::make('leaveType.type')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('employee_id')
-                    ->numeric()
+                TextColumn::make('employee.first_name')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('provider_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('from_date')
+                TextColumn::make('from_date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('to_date')
+                TextColumn::make('to_date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status'),
-                Tables\Columns\TextColumn::make('created_at')
+                SelectColumn::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'approved' => 'Approved',
+                        'rejected' => 'Rejected',
+                    ])
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -76,7 +129,12 @@ class LeaveResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    EditAction::make(),
+                    ViewAction::make(),
+                    DeleteAction::make(),
+                ])
+              
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

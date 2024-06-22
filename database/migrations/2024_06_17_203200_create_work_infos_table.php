@@ -17,13 +17,16 @@ return new class extends Migration
             $table->foreignId('employee_id')->constrained('employees')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->foreignId('provider_id')->constrained('providers')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
+          
             $table->foreignId('department_id')->constrained('departments')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-
+            $table->foreignId('job_type_id')->constrained('job_types')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $table->foreignId('job_level_id')->constrained('job_levels')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
             $table->foreignId('country_id')->constrained('countries')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
@@ -34,6 +37,7 @@ return new class extends Migration
             $table->integer('business_number')->nullable();
 
             $table->timestamps();
+            $table->softDeletes(); 
         });
     }
 

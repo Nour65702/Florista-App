@@ -18,14 +18,11 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->foreignId('provider_id')->constrained('providers')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
-
             $table->date('date');
             $table->time('check_in')->nullable();
             $table->time('check_out')->nullable();
             $table->timestamps();
+            $table->softDeletes(); 
         });
     }
 

@@ -2,48 +2,43 @@
 
 namespace App\Filament\HR\Resources;
 
-use App\Filament\HR\Resources\LeaveTypeResource\Pages;
-use App\Filament\HR\Resources\LeaveTypeResource\RelationManagers;
-use App\Models\LeaveType;
+use App\Filament\HR\Resources\JobLevelResource\Pages;
+use App\Filament\HR\Resources\JobLevelResource\RelationManagers;
+use App\Models\JobLevel;
 use Filament\Forms;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class LeaveTypeResource extends Resource
+class JobLevelResource extends Resource
 {
-    protected static ?string $model = LeaveType::class;
+    protected static ?string $model = JobLevel::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Vacations';
-    protected static ?int $navigationSort = 4;
-
-
+    protected static ?string $navigationGroup = 'Departments & Positions';
+    protected static ?int $navigationSort = 5;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Types')
-                    ->schema([
-                        TextInput::make('type')
-                            ->required()
-                            ->maxLength(255),
-                        Textarea::make('descreption')
-                            ->required()
-                            ->columnSpanFull(),
-                    ])->columns(3),
+                Group::make()
+                ->schema([
+                    Section::make('Levels')
+                        ->schema([
+                            TextInput::make('name')
+                                ->required()
+                                ->maxLength(255)
+                        ]),
+                ])
             ]);
     }
 
@@ -51,10 +46,7 @@ class LeaveTypeResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('type')
-                    ->sortable()
-                    ->searchable(),
-                TextColumn::make('descreption')
+                TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -64,17 +56,16 @@ class LeaveTypeResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('deleted_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                ActionGroup::make([
-                    EditAction::make(),
-                    ViewAction::make(),
-                    DeleteAction::make(),
-                ])
-              
+              EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -93,9 +84,9 @@ class LeaveTypeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListLeaveTypes::route('/'),
-            'create' => Pages\CreateLeaveType::route('/create'),
-            'edit' => Pages\EditLeaveType::route('/{record}/edit'),
+            'index' => Pages\ListJobLevels::route('/'),
+            'create' => Pages\CreateJobLevel::route('/create'),
+            'edit' => Pages\EditJobLevel::route('/{record}/edit'),
         ];
     }
 }

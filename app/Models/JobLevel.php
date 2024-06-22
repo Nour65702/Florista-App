@@ -7,14 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class JobType extends Model
+class JobLevel extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name'
     ];
-
 
     public function workInfos()
     {

@@ -17,16 +17,17 @@ return new class extends Migration
             $table->foreignId('employee_id')->constrained('employees')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-
-            $table->foreignId('provider_id')->constrained('providers')
+            $table->foreignId('work_info_id')->constrained('work_infos')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
+
             $table->date('from_date');
             $table->date('to_date');
             $table->string('company');
             $table->string('position');
-            
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

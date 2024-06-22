@@ -20,11 +20,11 @@ class CartController extends Controller
     {
         $cart = Cart::where('user_id', auth()->id())
             ->with([
-                'items.additions',   'customBouquets.products', // Load products for custom bouquets
+                'items.additions',   'customBouquets.products', 
                 'customBouquets.userCustomBouquetAdditions'
             ])
             ->first();
-       // return response()->json($cart);
+        // return response()->json($cart);
         return ApiResponse::success(['my_cart' => CartResource::make($cart)]);
     }
 
@@ -34,6 +34,8 @@ class CartController extends Controller
             'items' => 'required|array',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
+            'items.*.size' => 'required|array',
+            'items.*.size.*' => 'string|in:small,medium,big',
             'items.*.additions' => 'array',
             'items.*.additions.*.addition_id' => 'exists:additions,id',
             'items.*.additions.*.quantity' => 'integer|min:1',
@@ -46,6 +48,7 @@ class CartController extends Controller
                 'cart_id' => $cart->id,
                 'product_id' => $itemData['product_id'],
                 'quantity' => $itemData['quantity'],
+                'size' => $itemData['size'],
             ]);
 
             if (isset($itemData['additions'])) {
@@ -77,6 +80,7 @@ class CartController extends Controller
                 'cart_id' => $cart->id,
                 'product_id' => $bouquetProduct->product_id,
                 'quantity' => $bouquetProduct->quantity,
+                'size' => $bouquetProduct->size,
             ]);
 
             foreach ($bouquetProduct->additions as $addition) {

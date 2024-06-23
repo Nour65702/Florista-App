@@ -19,11 +19,11 @@ class ProviderLicenceResource extends Resource
 {
     protected static ?string $model = ProviderLicence::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-arrow-down-tray';
+    protected static ?string $navigationGroup = 'Request Providers';
 
     public static function form(Form $form): Form
     {
-
 
         return $form;
     }

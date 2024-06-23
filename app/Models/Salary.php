@@ -10,8 +10,7 @@ class Salary extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $fillable = [
-        
+    protected $fillable = [   
         'pay_date',
         'amount',
     ];
@@ -21,8 +20,4 @@ class Salary extends Model
         return $this->belongsTo(WorkInfo::class);
     }
 
-    public function provider()
-    {
-        return $this->belongsTo(Provider::class);
-    }
 }

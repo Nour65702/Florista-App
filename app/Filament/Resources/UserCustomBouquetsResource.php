@@ -17,7 +17,10 @@ class UserCustomBouquetsResource extends Resource
 {
     protected static ?string $model = UserCustomBouquets::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-fire';
+    public static ?string $label = 'Bouquets';
+    protected static ?string $navigationGroup = 'Customer Bouquets';
+
 
     public static function form(Form $form): Form
     {

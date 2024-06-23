@@ -23,6 +23,8 @@ class ContactUsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-m-phone';
     public static ?string $label = 'Contact';
+    protected static ?string $navigationGroup = 'Admin Panel Settings';
+
     
 
     public static function form(Form $form): Form

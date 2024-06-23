@@ -33,7 +33,7 @@ class CategoryResource extends Resource
     protected static ?string $model = Category::class;
 
     protected static ?string $navigationIcon = 'heroicon-m-server-stack';
-    protected static ?string $navigationGroup = 'System Management';
+    protected static ?string $navigationGroup = 'Shop';
     protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form

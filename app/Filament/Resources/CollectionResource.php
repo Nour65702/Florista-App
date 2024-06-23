@@ -26,7 +26,7 @@ class CollectionResource extends Resource
     protected static ?string $model = Collection::class;
 
     protected static ?string $navigationIcon = 'heroicon-m-squares-plus';
-    protected static ?string $navigationGroup = 'System Management';
+    protected static ?string $navigationGroup = 'Shop';
     protected static ?string $recordTitleAttribute = 'name';
     protected static ?int $navigationSort = 2;
 

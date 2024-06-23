@@ -25,7 +25,7 @@ class ProviderResource extends Resource
     protected static ?string $model = Provider::class;
 
     protected static ?string $navigationIcon = 'heroicon-m-user-plus';
-    protected static ?string $navigationGroup = 'User Management';
+    protected static ?string $navigationGroup = 'Request Providers';
 
     public static function form(Form $form): Form
     {

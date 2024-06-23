@@ -93,6 +93,15 @@ class ProviderLicenceResource extends Resource
         ];
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('is_active', false)->count();
+    }
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return static::getModel()::where('is_active', false)->count() > 0 ? 'danger' : 'success';
+    }
+
     public static function getPages(): array
     {
         return [

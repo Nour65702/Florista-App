@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers\AddressRelationManager;
+use App\Models\Alert;
 use App\Models\Order;
 use App\Models\Product;
 use Filament\Forms\Components\Group;
@@ -126,22 +127,45 @@ class OrderResource extends Resource
                                         ->minValue(1)
                                         ->columnSpan(2)
                                         ->reactive()
-                                        ->afterStateUpdated(fn ($state, Set $set, Get $get) => $set('total_amount', $state * $get('unit_amount')))
-                                        ->live()
-                                        ->afterStateUpdated(function ($state, Get $get) {
-
+                                        ->afterStateUpdated(function ($state, Set $set, Get $get) {
                                             $productId = $get('product_id');
-
                                             if ($productId) {
-
                                                 $product = Product::find($productId);
+                                                if ($product) {
+                                                    if ($product->quantity >= $state) {
+                                                        $product->quantity -= $state;
+                                                        $product->save();
 
-                                                if ($product && $product->quantity >= $state) {
-                                                    $product->quantity -= $state;
-                                                    $product->save();
+
+                                                        if ($product->quantity <= $product->min_level) {
+
+                                                            if (!Alert::where('product_id', $productId)->exists()) {
+                                                                Alert::create(['product_id' => $productId]);
+                                                            }
+                                                        }
+                                                    } else {
+
+                                                        $set('quantity', $product->quantity);
+                                                    }
                                                 }
                                             }
-                                        }),
+                                        })
+                                        ->afterStateUpdated(fn ($state, Set $set, Get $get) => $set('total_amount', $state * $get('unit_amount')))
+                                        ->live(),
+                                    // ->afterStateUpdated(function ($state, Get $get) {
+
+                                    //     $productId = $get('product_id');
+
+                                    //     if ($productId) {
+
+                                    //         $product = Product::find($productId);
+
+                                    //         if ($product && $product->quantity >= $state) {
+                                    //             $product->quantity -= $state;
+                                    //             $product->save();
+                                    //         }
+                                    //     }
+                                    // }),
 
                                     TextInput::make('unit_amount')
                                         ->numeric()
@@ -201,6 +225,12 @@ class OrderResource extends Resource
                 TextColumn::make('shipping_method')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('delivery_to')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('notes')
+                    ->searchable()
+                    ->sortable(),
                 SelectColumn::make('status')
                     ->options([
                         'new' => 'New',
@@ -245,12 +275,12 @@ class OrderResource extends Resource
     }
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        return static::getModel()::where('status', 'new')->count();
     }
 
     public static function getNavigationBadgeColor(): string|array|null
     {
-        return static::getModel()::count() > 10 ? 'danger' : 'success';
+        return static::getModel()::where('status', 'new')->count() > 10 ? 'danger' : 'success';
     }
     public static function getPages(): array
     {

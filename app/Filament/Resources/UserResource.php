@@ -9,10 +9,12 @@ use App\Filament\Resources\UserResource\RelationManagers\ReviewsRelationManager;
 use App\Models\User;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -51,6 +53,8 @@ class UserResource extends Resource
                             ->maxLength(255)
                             ->revealable()
                             ->visibleOn('create'),
+                        SpatieMediaLibraryFileUpload::make('user_image')
+                            ->collection('user_image')
                     ])->columns(3),
             ]);
     }
@@ -59,7 +63,8 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-
+                SpatieMediaLibraryImageColumn::make('user_image')
+                    ->collection('user_image'),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('email')

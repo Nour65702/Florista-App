@@ -12,9 +12,9 @@ class Order extends Model
         'user_id',
         'total_price',
         'status',
+        'delivery_to',
         'payment_method',
         'payment_status',
-        'shipping_amount',
         'shipping_method',
         'notes'
     ];

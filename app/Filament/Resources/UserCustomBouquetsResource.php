@@ -2,11 +2,10 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\AdditionProductResource\Pages;
-use App\Filament\Resources\AdditionProductResource\RelationManagers;
-use App\Models\AdditionProduct;
+use App\Filament\Resources\UserCustomBouquetsResource\Pages;
+use App\Filament\Resources\UserCustomBouquetsResource\RelationManagers;
+use App\Models\UserCustomBouquets;
 use Filament\Forms;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -14,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class AdditionProductResource extends Resource
+class UserCustomBouquetsResource extends Resource
 {
-    protected static ?string $model = AdditionProduct::class;
+    protected static ?string $model = UserCustomBouquets::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -24,18 +23,21 @@ class AdditionProductResource extends Resource
     {
         return $form
             ->schema([
-              
-                    Select::make('product_id')
-                    ->label('Product')
-                    ->relationship(name: 'product', titleAttribute: 'name')
-                    ->searchable()
-                    ->preload(),
-                    Select::make('addition_id')
-                    ->label('Type')
-                    ->relationship(name: 'addition', titleAttribute: 'name')
-                    ->searchable()
-                    ->preload(),
-            
+                Forms\Components\TextInput::make('user_id')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('design_id')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('color_id')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('total_price')
+                    ->required()
+                    ->numeric(),
             ]);
     }
 
@@ -43,10 +45,18 @@ class AdditionProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('product_id')
+                Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('addition_id')
+                Tables\Columns\TextColumn::make('design.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('color.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('total_price')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -81,9 +91,9 @@ class AdditionProductResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAdditionProducts::route('/'),
-            'create' => Pages\CreateAdditionProduct::route('/create'),
-            'edit' => Pages\EditAdditionProduct::route('/{record}/edit'),
+            'index' => Pages\ListUserCustomBouquets::route('/'),
+            'create' => Pages\CreateUserCustomBouquets::route('/create'),
+            'edit' => Pages\EditUserCustomBouquets::route('/{record}/edit'),
         ];
     }
 }

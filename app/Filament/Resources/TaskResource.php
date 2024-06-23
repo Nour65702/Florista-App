@@ -141,11 +141,11 @@ class TaskResource extends Resource
     }
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        return  static::getModel()::where('completed', false)->count();
     }
     public static function getNavigationBadgeColor(): string|array|null
     {
-        return static::getModel()::count() > 10 ? 'danger' : 'success';
+        return static::getModel()::where('completed', false)->count() > 5 ? 'danger' : 'success';
     }
 
     public static function getPages(): array
@@ -156,5 +156,4 @@ class TaskResource extends Resource
             'edit' => Pages\EditTask::route('/{record}/edit'),
         ];
     }
-  
 }

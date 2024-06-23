@@ -5,9 +5,11 @@ namespace App\Filament\Resources\ProviderResource\RelationManagers;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -21,17 +23,20 @@ class PostsRelationManager extends RelationManager
         return $form
             ->schema([
                 Section::make('Post Details')
-                ->schema([
+                    ->schema([
 
-                    // Select::make('provider_id')
-                    // ->relationship(name: 'provider', titleAttribute: 'name')
-                    // ->searchable()
-                    // ->preload()
-                    // ->required(),
-                    Forms\Components\TextInput::make('description')
-                        ->required()
-                        ->maxLength(255),
-                ])->columns(2),
+                        // Select::make('provider_id')
+                        // ->relationship(name: 'provider', titleAttribute: 'name')
+                        // ->searchable()
+                        // ->preload()
+                        // ->required(),
+                        Forms\Components\TextInput::make('description')
+                            ->required()
+                            ->maxLength(255),
+                        SpatieMediaLibraryFileUpload::make('post_images')
+                            ->multiple()
+                            ->collection('images'),
+                    ])->columns(2),
             ]);
     }
 
@@ -39,7 +44,10 @@ class PostsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-              //  Tables\Columns\TextColumn::make('provider.name'),
+                SpatieMediaLibraryImageColumn::make('images')
+                    ->collection('images')
+                    ->multiple(),
+                //  Tables\Columns\TextColumn::make('provider.name'),
                 Tables\Columns\TextColumn::make('description'),
             ])
             ->filters([

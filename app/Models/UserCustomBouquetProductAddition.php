@@ -20,4 +20,5 @@ class UserCustomBouquetProductAddition extends Model
     {
         return $this->belongsTo(Addition::class, 'type_addition_id', 'id');
     }
+   
 }

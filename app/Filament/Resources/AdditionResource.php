@@ -6,10 +6,22 @@ use App\Filament\Resources\AdditionResource\Pages;
 use App\Filament\Resources\AdditionResource\RelationManagers;
 use App\Models\Addition;
 use Filament\Forms;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -24,22 +36,85 @@ class AdditionResource extends Resource
     {
         return $form
             ->schema([
-                
-                    Select::make('type_addition_id')
-                    ->label('Type')
-                    ->relationship(name: 'typeAddition', titleAttribute: 'name')
-                    ->searchable()
-                    ->preload(),
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('description')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('price')
-                    ->required()
-                    ->numeric()
-                    ->prefix('$'),
+                Group::make()
+                    ->schema([
+                        Section::make('')
+                            ->schema([
+                                Select::make('type_addition_id')
+                                    ->label('Type')
+                                    ->relationship(name: 'typeAddition', titleAttribute: 'name')
+                                    ->searchable()
+                                    ->preload(),
+                                TextInput::make('name')
+                                    ->required()
+                                    ->maxLength(255),
+                                TextInput::make('price')
+                                    ->required()
+                                    ->numeric()
+                                    ->prefix('$'),
+                                TextInput::make('quantity')
+                                    ->numeric()
+                                    ->required()
+                                    ->default(1)
+                                    ->minValue(1)
+                                    ->reactive(),
+                                Textarea::make('description')
+                                    ->nullable(),
+                                // ->columnSpanFull(),
+                                SpatieMediaLibraryFileUpload::make('addition_image')
+                                    ->required()
+                                    ->collection('images')
+                            ])->columns(2),
+
+                    ])->columnSpanFull(),
+
+                Group::make()
+                    ->schema([
+                        Section::make('Product Additions')
+                            ->schema([
+                                Repeater::make('productAdditions')
+                                    ->relationship()
+                                    ->schema([
+
+                                        Select::make('product_id')
+                                            ->relationship('product', 'name')
+                                            ->searchable()
+                                            ->preload()
+                                            ->required()
+                                            ->distinct()
+                                            ->columnSpan(4)
+                                            ->reactive(),
+
+                                    ])
+                            ])
+                    ]),
+                Group::make()
+                    ->schema([
+                        Section::make('Bouquet Additions')
+                            ->schema([
+                                Repeater::make('bouquetAdditions')
+                                    ->relationship()
+                                    ->schema([
+
+                                        Select::make('bouquet_product_id')
+                                            ->relationship('bouquetProduct.bouquet', 'name')
+                                            ->searchable()
+                                            ->preload()
+                                            ->required()
+                                            ->distinct()
+                                            ->columnSpan(4)
+                                            ->reactive(),
+                                        TextInput::make('quantity')
+                                            ->numeric()
+                                            ->required()
+                                            ->default(1)
+                                            ->minValue(1)
+                                            ->reactive(),
+                                    ])
+                            ])
+                    ])
+
+
             ]);
     }
 
@@ -47,21 +122,23 @@ class AdditionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('type_addition_id')
-                    ->numeric()
+                SpatieMediaLibraryImageColumn::make('addition_image')
+                    ->collection('images'),
+                TextColumn::make('typeAddition.name')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('price')
+                TextColumn::make('price')
                     ->money()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -70,7 +147,12 @@ class AdditionResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+
+                ActionGroup::make([
+                    EditAction::make(),
+                    ViewAction::make(),
+                    DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

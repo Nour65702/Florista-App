@@ -63,4 +63,8 @@ class Provider extends User implements HasMedia
     {
         return $this->hasOne(ProviderLicence::class);
     }
+    public function getProfileImageUrlAttribute()
+    {
+        return $this->getFirstMediaUrl('profile_image');
+    }
 }

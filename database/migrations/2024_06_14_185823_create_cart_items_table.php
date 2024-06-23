@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('cart_id')->constrained('carts')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete()->cascadeOnUpdate();
             $table->integer('quantity');
+            $table->json('size');
             $table->timestamps();
         });
     }

@@ -12,6 +12,7 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -23,6 +24,7 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\Summarizers\Average;
 use Filament\Tables\Columns\Summarizers\Range;
 use Filament\Tables\Columns\TextColumn;
@@ -71,6 +73,8 @@ class ProductResource extends Resource
                             TextInput::make('min_level')
                                 ->required()
                                 ->numeric(),
+                            SpatieMediaLibraryFileUpload::make('image')
+                                ->collection('product_image'),
                         ])->columns(2)
                 ])->columnSpan(2),
                 Group::make()->schema([
@@ -108,6 +112,8 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('image')
+                    ->collection('product_image'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('collection.name')
@@ -163,7 +169,7 @@ class ProductResource extends Resource
             ]);
     }
 
-  
+
     public static function getRelations(): array
     {
         return [

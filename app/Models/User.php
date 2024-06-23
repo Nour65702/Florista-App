@@ -14,7 +14,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser, HasMedia, HasName
+class User extends Authenticatable implements FilamentUser, HasMedia
 {
     use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia, HasRoles;
 
@@ -68,10 +68,10 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName
     {
         return $this->hasMany(Address::class);
     }
-    public function getFilamentName(): string
-    {
-        return "{$this->first_name} {$this->last_name}";
-    }
+    // public function getFilamentName(): string
+    // {
+    //     return "{$this->first_name} {$this->last_name}";
+    // }
 
     public function AauthAcessToken()
     {
@@ -89,5 +89,10 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName
     // {
     //     return $this->belongsToMany(Role::class);
     // }
+
+    public function getProfileImageUrlAttribute()
+    {
+        return $this->getFirstMediaUrl('user_image');
+    }
 
 }

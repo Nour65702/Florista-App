@@ -52,6 +52,7 @@ class ProviderResource extends Resource
                             ->numeric()
                             ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
                         SpatieMediaLibraryFileUpload::make('profile_image')
+                            ->collection('profile_image')
                     ])->columns(3),
             ]);
     }
@@ -60,7 +61,8 @@ class ProviderResource extends Resource
     {
         return $table
             ->columns([
-                SpatieMediaLibraryImageColumn::make('profile_image'),
+                SpatieMediaLibraryImageColumn::make('profile_image')
+                    ->collection('profile_image'),
                 TextColumn::make('name')
                     ->sortable()
                     ->searchable(),

@@ -22,9 +22,13 @@ class WorkProvider extends Model implements HasMedia
     {
         return $this->belongsTo(Provider::class, 'provider_id', 'id');
     }
-    
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('images');
+    }
+    public function getImagesAttribute()
+    {
+        return $this->getMedia('images')->map->getUrl();
     }
 }

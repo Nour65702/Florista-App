@@ -14,13 +14,22 @@ class Addition extends BaseModel implements HasMedia
         'name',
         'type_addition_id',
         'description',
-        'price'
+        'price',
+        'quantity'
     ];
 
 
     public function products()
     {
         return $this->belongsToMany(Product::class, 'addition_products');
+    }
+    public function productAdditions()
+    {
+        return $this->hasMany(AdditionProduct::class);
+    }
+    public function bouquetAdditions()
+    {
+        return $this->hasMany(UserCustomBouquetProductAddition::class);
     }
 
     public function typeAddition()
@@ -46,7 +55,10 @@ class Addition extends BaseModel implements HasMedia
     {
         $this->addMediaCollection('addition_image')->singleFile();
     }
-
+    public function getProfileImageUrlAttribute()
+    {
+        return $this->getFirstMediaUrl('addition_image');
+    }
     public function userCustomBouquets()
     {
         return $this->belongsToMany(UserCustomBouquets::class, 'addition_user_custom_bouquet')->withPivot('quantity');

@@ -9,7 +9,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia ;
+    use HasFactory, InteractsWithMedia;
     protected $fillable = [
         'collection_id',
         'name',
@@ -30,7 +30,7 @@ class Product extends Model implements HasMedia
     {
         return $this->belongsTo(Collection::class);
     }
-   
+
     public function reviews()
     {
         return $this->hasMany(Review::class);
@@ -56,6 +56,17 @@ class Product extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('product_image')->useDisk('public');
+    }
+    public function getProfileImageUrlAttribute()
+    {
+        return $this->getFirstMediaUrl('product_image');
+    }
+    protected static function boot()
+    {
+        parent::boot();
 
+        static::creating(function ($model) {
+            $model->triggered_at = now();
+        });
     }
 }

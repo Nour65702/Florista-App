@@ -20,11 +20,11 @@ class CartController extends Controller
     {
         $cart = Cart::where('user_id', auth()->id())
             ->with([
-                'items.additions',   'customBouquets.products', 
+                'items.additions',   'customBouquets.products',
                 'customBouquets.userCustomBouquetAdditions'
             ])
             ->first();
-        // return response()->json($cart);
+
         return ApiResponse::success(['my_cart' => CartResource::make($cart)]);
     }
 
@@ -97,5 +97,43 @@ class CartController extends Controller
         $bouquet = $bouquet->fresh();
 
         return response()->json(['message' => 'Bouquet added to cart successfully', 'bouquet' => $bouquet]);
+    }
+
+    public function deleteCartItem($id)
+    {
+        $cart = Cart::where('user_id', auth()->id())->first();
+
+        if (!$cart) {
+            return response()->json(['message' => 'Cart not found'], 404);
+        }
+
+        $cartItem = CartItem::where('cart_id', $cart->id)->find($id);
+
+        if (!$cartItem) {
+            return response()->json(['message' => 'Cart item not found'], 404);
+        }
+
+        $cartItem->delete();
+
+        return response()->json(['message' => 'Cart item deleted successfully']);
+    }
+
+    public function deleteBouquetFromCart($id)
+    {
+        $cart = Cart::where('user_id', auth()->id())->first();
+
+        if (!$cart) {
+            return response()->json(['message' => 'Cart not found'], 404);
+        }
+
+        $bouquet = UserCustomBouquets::find($id);
+
+        if (!$bouquet) {
+            return response()->json(['message' => 'Bouquet not found'], 404);
+        }
+
+        $cart->customBouquets()->detach($bouquet->id);
+
+        return response()->json(['message' => 'Bouquet removed from cart successfully']);
     }
 }

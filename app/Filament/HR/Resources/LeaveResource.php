@@ -29,7 +29,7 @@ class LeaveResource extends Resource
 {
     protected static ?string $model = Leave::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-rocket-launch';
     protected static ?string $navigationGroup = 'Vacations';
     protected static ?int $navigationSort = 4;
 

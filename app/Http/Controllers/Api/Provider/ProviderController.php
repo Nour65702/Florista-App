@@ -15,9 +15,7 @@ use Illuminate\Http\Request;
 
 class ProviderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+   
     public function index()
     {
         $provider = Provider::all();
@@ -27,23 +25,13 @@ class ProviderController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreAddWorkFormRequest $request)
     {
-        $providerId = auth()->id(); // Assuming the provider is authenticated
+
+        $providerId = auth()->id();
+
         $provider = Provider::with('licence')->findOrFail($providerId);
 
-        // Check if the provider is active
         if (!$provider->licence || $provider->licence->is_active !== 1) {
             return ApiResponse::error('You are not authorized to add a post. Please wait for admin approval.', 403);
         }
@@ -51,18 +39,15 @@ class ProviderController extends Controller
         $validatedData = $request->validated();
         $validatedData['provider_id'] = $providerId;
 
-
-        // Create the work provider record
         $post = WorkProvider::create($validatedData);
 
-        // Handle multiple images upload
+
         if ($request->hasFile('post_images')) {
             foreach ($request->file('post_images') as $image) {
                 $post->addMedia($image)->toMediaCollection('images');
             }
         }
 
-        // Retrieve the images URLs
         $imageUrls = [];
         foreach ($post->getMedia('images') as $media) {
             $imageUrl = $media->getUrl();
@@ -75,9 +60,6 @@ class ProviderController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $provider = Provider::with('licence')->findOrFail($id);
@@ -86,9 +68,7 @@ class ProviderController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+   
     public function myProfile(string $id)
     {
         $provider = Provider::with('posts')->findOrFail($id);
@@ -97,9 +77,7 @@ class ProviderController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+   
     public function updateProfile(UpdateProfileFormRequest $request, string $id)
     {
         $provider = Provider::findOrFail($id);
@@ -117,14 +95,7 @@ class ProviderController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
-
+ 
     public function posts()
     {
         $posts = WorkProvider::all();

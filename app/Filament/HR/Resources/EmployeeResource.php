@@ -102,6 +102,31 @@ class EmployeeResource extends Resource
                                         ->columnSpanFull(),
                                 ])->columns(10)
 
+                                ]),
+                        Section::make('Employee Contract')
+                        ->schema([
+                            Repeater::make('Contracts')
+                                ->relationship()
+                                ->schema([
+                                    TextInput::make('city')
+                                        ->required()
+                                        ->maxLength(255)
+                                        ->columnSpan(5),
+
+                                    Select::make('contract_id')
+                                        ->relationship(name: 'contract', titleAttribute: 'name')
+                                        ->searchable()
+                                        ->preload()
+                                        ->required()
+                                        ->columnSpan(5),
+                                        DatePicker::make('start_date')
+                                        ->required()
+                                        ->columnSpan(5),
+                                        DatePicker::make('end_date')
+                                        ->columnSpan(5),
+                                   
+                                ])->columns(10)
+
                         ])
                 ])->columnSpanFull(),
             ]);

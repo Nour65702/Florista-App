@@ -67,4 +67,9 @@ class Employee extends Model
     {
         return $this->hasMany(WorkExperience::class);
     }
+
+    public function Contracts()
+    {
+        return $this->hasMany(EmployeeContract::class);
+    }
 }

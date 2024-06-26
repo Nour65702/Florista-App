@@ -28,13 +28,15 @@ Route::middleware('auth:user')->group(function () {
     Route::post('/order', [OrderController::class, 'createOrder']);
 
 
-    
-     // Cart routes
-     Route::get('/cart', [CartController::class, 'index']);
-     Route::post('/cart', [CartController::class, 'store']);
-     Route::post('/cart/bouquet', [CartController::class, 'addBouquetToCart']);
 
+    // Cart routes
+    Route::get('/cart', [CartController::class, 'index']);
+    Route::post('/cart', [CartController::class, 'store']);
+    Route::post('/cart/bouquet', [CartController::class, 'addBouquetToCart']);
+    Route::delete('/cart/item/{id}', [CartController::class, 'deleteCartItem']);
+    Route::delete('/cart/bouquet/{id}', [CartController::class, 'deleteBouquetFromCart']);
+
+    //Send reports
+    Route::post('/report', [CustomerController::class, 'sendReport']);
 });
-  Route::post('store',[BouquetController::class, 'storeDesgin']);
-
-  
+Route::post('store', [BouquetController::class, 'storeDesgin']);

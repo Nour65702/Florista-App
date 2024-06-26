@@ -15,15 +15,16 @@ Route::post('login', [LoginController::class, 'login']);
 Route::post('request-join', [RequestController::class, 'join']);
 
 Route::controller(ProviderController::class)->group(function () {
-    Route::post('add-post', 'store');
     Route::get('all', 'index');
     Route::get('profile/{provider}', 'myProfile');
     Route::get('posts', 'posts');
     Route::put('update/{provider}', 'updateProfile');
     Route::get('show/{provider}', 'show');
+  
 });
-
 
 Route::middleware('auth:provider')->group(function () {
     Route::post('logout', [LoginController::class, 'logout'])->middleware('auth:provider');
+    Route::post('add-post',[ProviderController::class,'store'] );
+
 });

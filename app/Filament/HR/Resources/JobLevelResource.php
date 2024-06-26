@@ -22,7 +22,7 @@ class JobLevelResource extends Resource
 {
     protected static ?string $model = JobLevel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-chart-bar';
     protected static ?string $navigationGroup = 'Departments & Positions';
     protected static ?int $navigationSort = 5;
 

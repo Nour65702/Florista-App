@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Cart;
 
+use App\Http\Resources\Addition\AdditionResource;
+use App\Models\Addition;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,13 +16,20 @@ class CartItemResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $imageUrl = null;
+
+        if ($this->product && $this->product->getFirstMediaUrl('product_image')) {
+            $imageUrl = $this->product->getFirstMediaUrl('product_image'); 
+            $imageUrl = str_replace('http://localhost:8000', '', $imageUrl);
+        }
         return [
             'id' => $this->id,
             'product_id' => $this->product_id,
             'product_name' => $this->product->name,
             'quantity' => $this->quantity,
-            'size'=>$this->size,
-            'additions' => CartItemAdditionResource::collection($this->whenLoaded('additions')),
+            'size' => $this->size,
+            'image' => $imageUrl,
+            'additions' => AdditionResource::collection($this->additions),
         ];
     }
 }

@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Api\Customer;
 
 use App\Contracts\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Customers\StoreRegisterFormRequest;
+use App\Http\Requests\Customers\StoreReportFormRequest;
 use App\Http\Requests\Customers\UpdateProfileFormRequest;
 use App\Http\Resources\Customers\CustomerResource;
+use App\Http\Resources\Customers\ReportResource;
+use App\Models\Report;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
@@ -23,25 +24,7 @@ class CustomerController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
+   
     public function show(string $id)
     {
         $user = User::findOrFail($id);
@@ -50,9 +33,7 @@ class CustomerController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+   
     public function myProfile(string $id)
     {
         $user = User::with('address')->findOrFail($id);
@@ -61,9 +42,7 @@ class CustomerController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+   
     public function updateProfile(UpdateProfileFormRequest $request, string $id)
     {
         $user = User::findOrFail($id);
@@ -82,11 +61,17 @@ class CustomerController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function sendReport(StoreReportFormRequest $request)
     {
-        //
+        $userId = auth()->id();
+        $validatedData = $request->validated();
+        $validatedData['user_id'] = $userId;
+
+        $report = Report::create($validatedData);
+
+        return ApiResponse::success([
+            'message' => 'Report submitted successfully',
+            'report' => ReportResource::make($report),
+        ]);
     }
 }

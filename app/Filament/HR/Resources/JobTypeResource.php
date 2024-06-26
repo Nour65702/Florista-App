@@ -25,7 +25,7 @@ class JobTypeResource extends Resource
 {
     protected static ?string $model = JobType::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-cube-transparent';
     protected static ?string $navigationGroup = 'Departments & Positions';
     protected static ?int $navigationSort = 5;
 

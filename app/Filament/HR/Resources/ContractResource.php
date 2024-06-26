@@ -2,14 +2,11 @@
 
 namespace App\Filament\HR\Resources;
 
-use App\Filament\HR\Resources\PerformanceReviewResource\Pages;
-use App\Filament\HR\Resources\PerformanceReviewResource\RelationManagers;
-use App\Models\PerformanceReview;
+use App\Filament\HR\Resources\ContractResource\Pages;
+use App\Filament\HR\Resources\ContractResource\RelationManagers;
+use App\Models\Contract;
 use Filament\Forms;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,13 +20,13 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class PerformanceReviewResource extends Resource
+class ContractResource extends Resource
 {
-    protected static ?string $model = PerformanceReview::class;
+    protected static ?string $model = Contract::class;
 
-    protected static ?string $navigationIcon = 'heroicon-m-hand-thumb-up';
-    protected static ?string $navigationGroup = 'Reviews & Ratings ';
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationIcon = 'heroicon-m-rbook-open';
+    protected static ?string $navigationGroup = 'Employee Management';
+    protected static ?int $navigationSort = 3;
 
 
 
@@ -37,25 +34,14 @@ class PerformanceReviewResource extends Resource
     {
         return $form
             ->schema([
-
-                Section::make('Review Details')
+                Section::make('Contract Info')
                     ->schema([
-                        Select::make('employee_id')
-                            ->relationship(name: 'employee', titleAttribute: 'first_name')
-                            ->searchable()
-                            ->preload()
-                            ->searchable(),
-
-
-                        TextInput::make('rating')
+                        TextInput::make('code')
                             ->required()
-                            ->numeric()
-                            ->default(0),
-                        DatePicker::make('review_date')
-                            ->required(),
-                        Textarea::make('review')
+                            ->numeric(),
+                        TextInput::make('name')
                             ->required()
-                            ->columnSpanFull(),
+                            ->maxLength(255),
                     ])->columns(2)
 
             ]);
@@ -65,18 +51,12 @@ class PerformanceReviewResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('employee.first_name')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('rating')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('review')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('review_date')
-                    ->date()
-                    ->sortable(),
+                TextColumn::make('code')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('name')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -94,8 +74,8 @@ class PerformanceReviewResource extends Resource
                     EditAction::make(),
                     ViewAction::make(),
                     DeleteAction::make(),
-                ])
 
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -114,9 +94,9 @@ class PerformanceReviewResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPerformanceReviews::route('/'),
-            'create' => Pages\CreatePerformanceReview::route('/create'),
-            'edit' => Pages\EditPerformanceReview::route('/{record}/edit'),
+            'index' => Pages\ListContracts::route('/'),
+            'create' => Pages\CreateContract::route('/create'),
+            'edit' => Pages\EditContract::route('/{record}/edit'),
         ];
     }
 }

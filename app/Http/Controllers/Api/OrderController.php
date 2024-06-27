@@ -19,7 +19,7 @@ class OrderController extends Controller
 {
     public function createOrder(Request $request)
     {
-        
+
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'payment_method' => 'nullable|string',
@@ -28,7 +28,7 @@ class OrderController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-       
+
         $cart = Cart::where('user_id', $request->user_id)->first();
         if (!$cart) {
             return response()->json(['message' => 'No cart found for the user'], 404);
@@ -36,22 +36,22 @@ class OrderController extends Controller
 
         $cartItems = $cart->items;
 
-       
+
         $totalPrice = 0;
 
-      
+
         foreach ($cartItems as $cartItem) {
             $product = $cartItem->product;
             $totalPrice += $product->price * $cartItem->quantity;
         }
 
-       
+
         if ($request->filled('custom_bouquet_id')) {
             $bouquet = UserCustomBouquets::findOrFail($request->custom_bouquet_id);
             $totalPrice += $bouquet->total_price;
         }
 
-     
+
         $orderData = [
             'user_id' => $request->user_id,
             'total_price' => $totalPrice,
@@ -64,7 +64,7 @@ class OrderController extends Controller
 
         $order = Order::create($orderData);
 
-      
+
         foreach ($cartItems as $cartItem) {
             $product = $cartItem->product;
             OrderItem::create([
@@ -76,14 +76,14 @@ class OrderController extends Controller
             ]);
         }
 
-       
+
         if ($request->filled('custom_bouquet_id')) {
             OrderCustomBouquet::create([
                 'order_id' => $order->id,
                 'user_custom_bouquet_id' => $request->custom_bouquet_id,
             ]);
         }
-       
+
         return response()->json(['message' => 'Order created successfully', 'order' => OrderResource::make($order)]);
     }
 

@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 class ProviderController extends Controller
 {
-   
+
     public function index()
     {
         $provider = Provider::all();
@@ -68,7 +68,7 @@ class ProviderController extends Controller
         ]);
     }
 
-   
+
     public function myProfile(string $id)
     {
         $provider = Provider::with('posts')->findOrFail($id);
@@ -77,7 +77,7 @@ class ProviderController extends Controller
         ]);
     }
 
-   
+
     public function updateProfile(UpdateProfileFormRequest $request, string $id)
     {
         $provider = Provider::findOrFail($id);
@@ -95,10 +95,23 @@ class ProviderController extends Controller
         ]);
     }
 
- 
+
     public function posts()
     {
         $posts = WorkProvider::all();
         return ApiResponse::success(['posts' => PostResource::collection($posts)]);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        $providers = Provider::where('name', 'like', '%' . $query . '%')
+            ->orWhere('email', 'like', '%' . $query . '%')
+            ->get();
+
+        return ApiResponse::success([
+            'providers' => ProviderResource::collection($providers),
+        ]);
     }
 }

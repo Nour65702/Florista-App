@@ -9,4 +9,6 @@ Route::prefix('collection')->controller(CollectionController::class)->group(func
 
     Route::get('all', 'index');
     Route::get('show/{collection}', 'show');
+    Route::get('search', 'searchCollection');
+    Route::get('search-product', 'searchProduct');
 });

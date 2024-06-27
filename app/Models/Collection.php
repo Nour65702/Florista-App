@@ -23,4 +23,6 @@ class Collection extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    
 }

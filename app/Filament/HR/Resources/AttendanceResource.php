@@ -26,7 +26,7 @@ class AttendanceResource extends Resource
 {
     protected static ?string $model = Attendance::class;
 
-    protected static ?string $navigationIcon = 'heroicon-m-hand-thumb-up';
+    protected static ?string $navigationIcon = 'heroicon-m-arrows-up-down';
     protected static ?string $navigationGroup = 'Permanence Monitoring';
     protected static ?int $navigationSort = 3;
 

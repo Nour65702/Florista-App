@@ -20,6 +20,7 @@ Route::controller(ProviderController::class)->group(function () {
     Route::get('posts', 'posts');
     Route::put('update/{provider}', 'updateProfile');
     Route::get('show/{provider}', 'show');
+    Route::get('search', 'search');
   
 });
 

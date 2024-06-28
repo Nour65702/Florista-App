@@ -46,8 +46,5 @@ class WorkInfo extends Model
     {
         return $this->hasMany(WorkExperience::class);
     }
-    public function salary()
-    {
-        return $this->hasMany(Salary::class);
-    }
+   
 }

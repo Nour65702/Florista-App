@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('rating')->default(0);
             $table->date('review_date');
             $table->timestamps();
-            $table->softDeletes(); 
+            $table->softDeletes();
         });
     }
 

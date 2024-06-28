@@ -15,6 +15,9 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -24,7 +27,8 @@ class LeaveResource extends Resource
 {
     protected static ?string $model = Leave::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-globe-alt';
+    protected static ?string $navigationGroup = 'My Leaves';
 
     public static function form(Form $form): Form
     {
@@ -66,37 +70,34 @@ class LeaveResource extends Resource
     {
         return $table
 
-        ->query(function (Builder $query) {
-            return $query->where('employee_id', Auth::id());
-        })
 
             ->columns([
-                Tables\Columns\TextColumn::make('type_id')
+                TextColumn::make('leaveType.type')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('employee.first_name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('employee.first_name')
-                    ->numeric()
-                    ->sortable(),
-                    Tables\Columns\TextColumn::make('employee.workInfos.business_email')
+                TextColumn::make('employee.workInfos.business_email')
                     ->label('Business Email')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('from_date')
+                TextColumn::make('from_date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('to_date')
+                TextColumn::make('to_date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status'),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('status'),
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -105,13 +106,18 @@ class LeaveResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    protected static function getTableQuery(): Builder
+    {
+        return parent::getTableQuery()->where('employee_id', Auth::id());
     }
 
     public static function getRelations(): array

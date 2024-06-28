@@ -20,12 +20,14 @@ class AdditionSeeder extends Seeder
                 'name' => 'Addition 1',
                 'description' => 'Description of Addition 1',
                 'price' => 20.00,
+                'quantity'=> 5
             ],
             [
                 'type_addition_id' => TypeAddition::where('name', 'Type B')->first()->id,
                 'name' => 'Addition 2',
                 'description' => 'Description of Addition 2',
                 'price' => 15.00,
+                'quantity'=> 10
             ],
             // Add more additions as needed
         ];

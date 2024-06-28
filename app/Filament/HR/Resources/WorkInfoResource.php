@@ -92,21 +92,6 @@ class WorkInfoResource extends Resource
                         ]),
 
 
-                    Section::make('Salary Informations')
-                        ->schema([
-                            Repeater::make('salary')
-                                ->relationship()
-                                ->schema([
-                                    
-                                    DatePicker::make('pay_date')
-                                        ->required(),
-                                    TextInput::make('amount')
-                                        ->required()
-                                        ->numeric(),
-
-                                ])->columns(2)
-                        ])
-
                 ])->columnSpanFull(),
             ]);
     }

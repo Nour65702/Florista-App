@@ -33,6 +33,7 @@ class AdminPanelProvider extends PanelProvider
                         ->directory('images/backgrounds')
                 ),
             ])
+            ->brandName('Admin Panel Florista')
             ->default()
             ->id('admin')
             ->path('admin')

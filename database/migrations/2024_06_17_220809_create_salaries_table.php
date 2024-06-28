@@ -18,10 +18,6 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->foreignId('work_info_id')->constrained('work_infos')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
-
             $table->date('pay_date');
             $table->decimal('amount', 10, 2);
             $table->timestamps();

@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\HR\Resources\SalaryResource\Widgets\UserSalaryWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -23,6 +24,8 @@ class HRPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->brandName('HR Florista')
+
             ->id('hR')
             ->path('hR')
             ->login()
@@ -36,8 +39,9 @@ class HRPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/HR/Widgets'), for: 'App\\Filament\\HR\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                // Widgets\AccountWidget::class,
+                //   Widgets\FilamentInfoWidget::class,
+                UserSalaryWidget::class
             ])
             ->middleware([
                 EncryptCookies::class,

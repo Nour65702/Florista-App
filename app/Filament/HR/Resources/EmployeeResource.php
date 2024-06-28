@@ -21,6 +21,7 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 
 class EmployeeResource extends Resource
 {
@@ -170,7 +171,10 @@ class EmployeeResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('user')
+                ->relationship('user','name'),
+                SelectFilter::make('provider')
+                ->relationship('provider','name')
             ])
             ->actions([
                 ActionGroup::make([

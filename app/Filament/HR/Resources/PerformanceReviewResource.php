@@ -29,7 +29,7 @@ class PerformanceReviewResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-m-hand-thumb-up';
     protected static ?string $navigationGroup = 'Reviews & Ratings ';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 4;
 
 
 
@@ -51,8 +51,7 @@ class PerformanceReviewResource extends Resource
                             ->required()
                             ->numeric()
                             ->default(0),
-                        DatePicker::make('review_date')
-                            ->required(),
+
                         Textarea::make('review')
                             ->required()
                             ->columnSpanFull(),

@@ -1,4 +1,4 @@
-{{-- @php
+@php
     $brandName = filament()->getBrandName();
     $brandLogo = filament()->getBrandLogo();
     $brandLogoHeight = filament()->getBrandLogoHeight() ?? '1.5rem';
@@ -54,5 +54,5 @@
 
 @if ($hasDarkModeBrandLogo)
     {{ $content($darkModeBrandLogo, isDarkMode: true) }}
-@endif --}}
-<img src="{{asset('/images/photo_2024-04-30_10-20-49.png')}}" alt="logo" class="h-10">
+@endif
+{{-- <img src="{{asset('/images/photo_2024-04-30_10-20-49.png')}}" alt="logo" class="h-10"> --}}

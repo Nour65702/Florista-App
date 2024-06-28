@@ -15,7 +15,7 @@ class PerformanceReview extends Model
         'review',
         'rating',
         'review_date',
-        'provider_id'
+       
     ];
 
     public function employee()
@@ -23,8 +23,12 @@ class PerformanceReview extends Model
         return $this->belongsTo(Employee::class);
     }
 
-    public function provider()
+    protected static function boot()
     {
-        return $this->belongsTo(Provider::class);
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->review_date = now();
+        });
     }
 }

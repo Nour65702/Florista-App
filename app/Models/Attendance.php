@@ -15,7 +15,6 @@ class Attendance extends Model
         'date',
         'check_in',
         'check_out',
-        'provider_id'
     ];
 
     public function employee()
@@ -26,5 +25,14 @@ class Attendance extends Model
     public function provider()
     {
         return $this->belongsTo(Provider::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->date = now();
+        });
     }
 }

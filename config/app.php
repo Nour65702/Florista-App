@@ -196,6 +196,7 @@ return [
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\Filament\HRPanelProvider::class,
         App\Providers\Filament\UserPanelProvider::class,
+        App\Providers\Filament\AccountingPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
 
     ],

@@ -143,6 +143,14 @@ class LeaveResource extends Resource
             ]);
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status', 'pending')->count();
+    }
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return static::getModel()::where('status', 'pending')->count() > 10 ? 'danger' : 'success';
+    }
     public static function getRelations(): array
     {
         return [

@@ -31,7 +31,6 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\ViewAction;
 
 
-
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
@@ -152,20 +151,7 @@ class OrderResource extends Resource
                                         })
                                         ->afterStateUpdated(fn ($state, Set $set, Get $get) => $set('total_amount', $state * $get('unit_amount')))
                                         ->live(),
-                                    // ->afterStateUpdated(function ($state, Get $get) {
 
-                                    //     $productId = $get('product_id');
-
-                                    //     if ($productId) {
-
-                                    //         $product = Product::find($productId);
-
-                                    //         if ($product && $product->quantity >= $state) {
-                                    //             $product->quantity -= $state;
-                                    //             $product->save();
-                                    //         }
-                                    //     }
-                                    // }),
 
                                     TextInput::make('unit_amount')
                                         ->numeric()
@@ -258,11 +244,13 @@ class OrderResource extends Resource
                     ViewAction::make(),
                     EditAction::make(),
                     DeleteAction::make()
-                ])
+                ]),
+               
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                   
                 ]),
             ]);
     }
@@ -281,6 +269,12 @@ class OrderResource extends Resource
     public static function getNavigationBadgeColor(): string|array|null
     {
         return static::getModel()::where('status', 'new')->count() > 10 ? 'danger' : 'success';
+    }
+    public function getTableBulkActions()
+    {
+        return  [
+           
+        ];
     }
     public static function getPages(): array
     {

@@ -11,6 +11,5 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateProvider extends CreateRecord
 {
     protected static string $resource = ProviderResource::class;
-
-   
+  
 }

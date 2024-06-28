@@ -69,5 +69,4 @@ class Product extends Model implements HasMedia
             $model->triggered_at = now();
         });
     }
-   
 }

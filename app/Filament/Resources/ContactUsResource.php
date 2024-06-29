@@ -24,6 +24,8 @@ class ContactUsResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-m-phone';
     public static ?string $label = 'Contact';
     protected static ?string $navigationGroup = 'Admin Panel Settings';
+    protected static ?int $navigationSort = 7;
+
 
     
 

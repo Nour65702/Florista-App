@@ -32,7 +32,12 @@ class CollectionController extends Controller
     public function searchCollection(Request $request)
     {
         $query = $request->input('query');
-
+  
+        if (empty($query)) {
+            return ApiResponse::success([
+                'collections' => [],
+            ]);
+        }
         $collections = Collection::with(['products'])
             ->where('name', 'like', '%' . $query . '%')
             ->orWhereHas('products', function ($q) use ($query) {
@@ -48,6 +53,12 @@ class CollectionController extends Controller
     public function searchProduct(Request $request)
     {
         $query = $request->input('query');
+
+        if (empty($query)) {
+            return ApiResponse::success([
+                'products' => [],
+            ]);
+        }
         $products = Product::where('name', 'like', '%' . $query . '%')
             ->with('collection')
             ->get();

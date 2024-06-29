@@ -26,18 +26,19 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->login()
             ->plugins([
                 FilamentBackgroundsPlugin::make()
-                ->imageProvider(
-                    MyImages::make()
-                        ->directory('images/backgrounds')
-                ),
+                    ->imageProvider(
+                        MyImages::make()
+                            ->directory('images/backgrounds')
+                    ),
             ])
             ->brandName('Admin Panel Florista')
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,

@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         $user1 = User::create([
 
             'name' => 'Admin',
-            'email' => 'obada@gmail.com',
+            'email' => 'nour@gmail.com',
             'password' => Hash::make('123456789'),
 
         ]);
@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             DesignSeeder::class,
             ColorSeeder::class,
-            AdditionSeeder::class,
+          //  AdditionSeeder::class,
         ]);
     }
 }

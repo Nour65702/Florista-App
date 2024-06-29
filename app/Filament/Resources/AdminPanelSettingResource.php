@@ -32,6 +32,8 @@ class AdminPanelSettingResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-m-cog-6-tooth';
     public static ?string $label = 'Settings';
     protected static ?string $navigationGroup = 'Admin Panel Settings';
+    protected static ?int $navigationSort = 7;
+
 
     public static function form(Form $form): Form
     {

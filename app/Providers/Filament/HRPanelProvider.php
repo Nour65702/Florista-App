@@ -18,6 +18,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 
 class HRPanelProvider extends PanelProvider
 {
@@ -25,12 +26,14 @@ class HRPanelProvider extends PanelProvider
     {
         return $panel
             ->brandName('HR Florista')
-
+            ->plugins([
+                FilamentApexChartsPlugin::make()
+            ])
             ->id('hR')
             ->path('hR')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => '#F31559',
             ])
             ->discoverResources(in: app_path('Filament/HR/Resources'), for: 'App\\Filament\\HR\\Resources')
             ->discoverPages(in: app_path('Filament/HR/Pages'), for: 'App\\Filament\\HR\\Pages')

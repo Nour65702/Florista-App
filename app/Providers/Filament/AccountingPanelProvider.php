@@ -24,11 +24,14 @@ class AccountingPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+           
             ->id('accounting')
             ->path('accounting')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+
+                'primary' => '#7C3E66',
+              
             ])
             ->brandName('Accounting Florista')
 

@@ -105,7 +105,12 @@ class ProviderController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('query');
-
+        
+        if (empty($query)) {
+            return ApiResponse::success([
+                'providers' => [],
+            ]);
+        }
         $providers = Provider::where('name', 'like', '%' . $query . '%')
             ->orWhere('email', 'like', '%' . $query . '%')
             ->get();

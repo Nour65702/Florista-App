@@ -7,6 +7,7 @@ use App\Http\Resources\Addresses\AddressResource;
 use App\Http\Resources\Order\OrderResource;
 use App\Models\Addition;
 use App\Models\Address;
+use App\Models\Alert;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderCustomBouquet;
@@ -39,9 +40,25 @@ class OrderController extends Controller
 
         $totalPrice = 0;
 
-
         foreach ($cartItems as $cartItem) {
             $product = $cartItem->product;
+
+
+            if ($product->quantity < $cartItem->quantity) {
+
+                $cartItem->quantity = $product->quantity;
+            }
+
+            $product->quantity -= $cartItem->quantity;
+            $product->save();
+
+            if ($product->quantity <= $product->min_level) {
+
+                if (!Alert::where('product_id', $product->id)->exists()) {
+                    Alert::create(['product_id' => $product->id]);
+                }
+            }
+
             $totalPrice += $product->price * $cartItem->quantity;
         }
 
@@ -50,7 +67,6 @@ class OrderController extends Controller
             $bouquet = UserCustomBouquets::findOrFail($request->custom_bouquet_id);
             $totalPrice += $bouquet->total_price;
         }
-
 
         $orderData = [
             'user_id' => $request->user_id,
@@ -86,5 +102,4 @@ class OrderController extends Controller
 
         return response()->json(['message' => 'Order created successfully', 'order' => OrderResource::make($order)]);
     }
-
 }

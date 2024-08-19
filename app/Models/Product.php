@@ -69,4 +69,19 @@ class Product extends Model implements HasMedia
             $model->triggered_at = now();
         });
     }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function likesCount()
+    {
+        return $this->likes()->where('is_liked', true)->count();
+    }
+
+    public function dislikesCount()
+    {
+        return $this->likes()->where('is_liked', false)->count();
+    }
 }

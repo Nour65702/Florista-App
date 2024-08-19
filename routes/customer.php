@@ -5,9 +5,11 @@ use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\Customer\Auth\LoginController;
 use App\Http\Controllers\Api\Customer\Auth\RegisterController;
 use App\Http\Controllers\Api\Customer\CustomerController;
+use App\Http\Controllers\Api\LoyaltyController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\ProductLikeController;
 use Illuminate\Support\Facades\Route;
-use OpenSpout\Common\Entity\Row;
+
 
 Route::post('register', [RegisterController::class, 'register']);
 Route::post('login', [LoginController::class, 'login']);
@@ -26,6 +28,7 @@ Route::middleware('auth:user')->group(function () {
     Route::post('/custom-bouquet', [BouquetController::class, 'createCustomBouquet']);
     Route::get('/custom-bouquets', [BouquetController::class, 'getUserCustomBouquets']);
     Route::post('/order', [OrderController::class, 'createOrder']);
+    Route::get('/my-orders', [OrderController::class, 'getMyOrders']);
 
 
 
@@ -38,5 +41,15 @@ Route::middleware('auth:user')->group(function () {
 
     //Send reports
     Route::post('/report', [CustomerController::class, 'sendReport']);
+
+    //Like Product
+    Route::post('products/{id}/like-or-unlike', [ProductLikeController::class, 'likeOrUnlike']);
+    Route::get('products/{id}', [ProductLikeController::class, 'isProductLiked']);
+    Route::get('liked-products', [ProductLikeController::class, 'getLikedProducts']);
+
+    //loyalty points 
+    Route::get('/loyalty', [LoyaltyController::class, 'index']);
+    Route::get('/loyalty/transactions', [LoyaltyController::class, 'transactions']);
+    Route::post('/loyalty/redeem', [LoyaltyController::class, 'redeemPoints']);
 });
 Route::post('store', [BouquetController::class, 'storeDesgin']);

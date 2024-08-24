@@ -16,5 +16,8 @@ class AdminPanelSetting extends Model
         'general_alert',
     ];
 
-   
+    public function branches()
+    {
+        return $this->hasMany(Branch::class);
+    }
 }

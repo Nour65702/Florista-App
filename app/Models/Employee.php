@@ -18,8 +18,9 @@ class Employee extends Model
         'date_of_birth',
         'date_of_joining',
         'gender',
-        'provider_id',
-        'user_id'
+        'employee_type',
+        'user_id',
+        'branch_id'
     ];
 
 
@@ -51,6 +52,10 @@ class Employee extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 
     public function provider()

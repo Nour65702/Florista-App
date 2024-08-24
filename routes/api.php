@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\NotificationController;
 use App\Models\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,3 +37,4 @@ Route::prefix('v1')->group(function () use ($dev_path) {
 
 });
 
+Route::get('/notifications', [NotificationController::class, 'getNotifications']);

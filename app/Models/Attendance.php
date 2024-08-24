@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,6 +18,26 @@ class Attendance extends Model
         'check_out',
     ];
 
+    protected $appends = ['duration'];
+
+    public function getDurationAttribute()
+    {
+        if ($this->check_in && $this->check_out) {
+            $checkIn = Carbon::parse($this->check_in);
+            $checkOut = Carbon::parse($this->check_out);
+
+            return $checkOut->diffForHumans($checkIn, true); 
+        }
+
+        return null;
+    }
+
+    public function checkInNow()
+    {
+        $this->update([
+            'check_in' => now()->toTimeString(), 
+        ]);
+    }
     public function employee()
     {
         return $this->belongsTo(Employee::class);

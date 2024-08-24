@@ -17,8 +17,8 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate()
                 ->nullable();
-                
-            $table->foreignId('provider_id')->constrained('providers')
+
+            $table->foreignId('branch_id')->constrained('branches')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate()
                 ->nullable();
@@ -30,8 +30,9 @@ return new class extends Migration
             $table->date('date_of_joining')->nullable();
             $table->integer('phone')->nullable();
             $table->enum('gender', ['female', 'male'])->default('male');
+            $table->enum('employee_type', ['hr', 'accounting', 'provider'])->default('hr');
             $table->timestamps();
-            $table->softDeletes(); 
+            $table->softDeletes();
         });
     }
 

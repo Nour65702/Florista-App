@@ -5,7 +5,9 @@ namespace App\Filament\User\Resources;
 use App\Filament\User\Resources\AttendanceResource\Pages;
 use App\Filament\User\Resources\AttendanceResource\RelationManagers;
 use App\Models\Attendance;
+use Carbon\Carbon;
 use Filament\Forms;
+use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
@@ -18,7 +20,7 @@ use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Actions\DeleteAction;
 use Illuminate\Support\Facades\Auth;
 
 class AttendanceResource extends Resource
@@ -36,10 +38,23 @@ class AttendanceResource extends Resource
                 Section::make('Attendance Details')
                     ->schema([
                         Hidden::make('employee_id')
-                            ->default(fn () => Auth::id()),
+                            ->default(fn() => Auth::id()),
 
-                        TimePicker::make('check_in'),
-                        TimePicker::make('check_out'),
+                        TimePicker::make('check_in')
+                            ->label('Check In Time')
+                            
+                            ->dehydrated(false)
+                            ->required(),
+
+                        TimePicker::make('check_out')
+                            ->label('Check Out Time')
+                           
+                            ->dehydrated(false)
+                            ->required(),
+
+                      
+
+                            
 
                     ])->columns(2)
 
@@ -54,8 +69,27 @@ class AttendanceResource extends Resource
                     ->numeric()
                     ->sortable(),
 
-                TextColumn::make('check_in'),
-                TextColumn::make('check_out'),
+                TextColumn::make('check_in')
+                    ->sortable()
+                    ->formatStateUsing(fn($state) => $state ? Carbon::parse($state)->format('H:i:s') : '-'),
+
+                TextColumn::make('check_out')
+                    ->sortable()
+                    ->formatStateUsing(fn($state) => $state ? Carbon::parse($state)->format('H:i:s') : '-'),
+
+                TextColumn::make('duration')
+                    ->label('Duration')
+                    ->getStateUsing(function ($record) {
+                        if ($record->check_in && $record->check_out) {
+                            $checkIn = Carbon::parse($record->check_in);
+                            $checkOut = Carbon::parse($record->check_out);
+                            $diff = $checkIn->diff($checkOut);
+                            return $diff->format('%H:%I:%S');
+                        }
+                        return '-';
+                    })
+                    ->sortable(),
+
                 TextColumn::make('date')
                     ->date()
                     ->sortable(),
@@ -77,7 +111,10 @@ class AttendanceResource extends Resource
                 //
             ])
             ->actions([
-                   ViewAction::make(),
+
+                ViewAction::make(),
+               
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -97,6 +134,7 @@ class AttendanceResource extends Resource
             //
         ];
     }
+
 
     public static function getPages(): array
     {

@@ -14,9 +14,6 @@ return new class extends Migration
         Schema::create('work_experiences', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('employee_id')->constrained('employees')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
             $table->foreignId('work_info_id')->constrained('work_infos')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();

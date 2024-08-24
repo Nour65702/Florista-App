@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Customer\Auth\LoginController;
 use App\Http\Controllers\Api\Customer\Auth\RegisterController;
 use App\Http\Controllers\Api\Customer\CustomerController;
 use App\Http\Controllers\Api\LoyaltyController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductLikeController;
 use Illuminate\Support\Facades\Route;
@@ -51,5 +52,6 @@ Route::middleware('auth:user')->group(function () {
     Route::get('/loyalty', [LoyaltyController::class, 'index']);
     Route::get('/loyalty/transactions', [LoyaltyController::class, 'transactions']);
     Route::post('/loyalty/redeem', [LoyaltyController::class, 'redeemPoints']);
+    Route::get('/notifications', [NotificationController::class, 'getNotifications']);
 });
 Route::post('store', [BouquetController::class, 'storeDesgin']);

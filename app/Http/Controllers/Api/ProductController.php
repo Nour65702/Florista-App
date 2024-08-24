@@ -23,12 +23,6 @@ class ProductController extends Controller
     }
 
 
-    public function create()
-    {
-        //
-    }
-
-
     public function store(StoreProductRequest $request)
     {
         // Validate incoming request data
@@ -56,22 +50,6 @@ class ProductController extends Controller
     }
 
 
-    public function edit(string $id)
-    {
-        //
-    }
-
-
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-
-    public function destroy(string $id)
-    {
-        //
-    }
 
     public function storeAddition(Request $request)
     {

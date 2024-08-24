@@ -18,7 +18,7 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->date('pay_date');
+            $table->date('pay_date')->nullable();
             $table->decimal('amount', 10, 2);
             $table->timestamps();
             $table->softDeletes();

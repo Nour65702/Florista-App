@@ -3,21 +3,16 @@
 namespace App\Filament\HR\Resources;
 
 use App\Filament\HR\Resources\SalaryRequestResource\Pages;
-use App\Filament\HR\Resources\SalaryRequestResource\RelationManagers;
 use App\Models\SalaryRequest;
-use Filament\Forms;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
 
 class SalaryRequestResource extends Resource
 {

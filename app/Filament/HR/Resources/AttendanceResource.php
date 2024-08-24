@@ -5,6 +5,7 @@ namespace App\Filament\HR\Resources;
 use App\Filament\HR\Resources\AttendanceResource\Pages;
 use App\Filament\HR\Resources\AttendanceResource\RelationManagers;
 use App\Models\Attendance;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
@@ -66,6 +67,18 @@ class AttendanceResource extends Resource
                     ->sortable(),
                 TextColumn::make('check_in'),
                 TextColumn::make('check_out'),
+                TextColumn::make('duration')
+                    ->label('Duration')
+                    ->getStateUsing(function ($record) {
+                        if ($record->check_in && $record->check_out) {
+                            $checkIn = Carbon::parse($record->check_in);
+                            $checkOut = Carbon::parse($record->check_out);
+                            $diff = $checkIn->diff($checkOut);
+                            return $diff->format('%H:%I:%S');
+                        }
+                        return '-';
+                    })
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

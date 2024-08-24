@@ -8,9 +8,7 @@ use App\Http\Resources\Cart\CartResource;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\CartItemAddition;
-use App\Models\Order;
-use App\Models\OrderCustomBouquet;
-use App\Models\OrderItem;
+use App\Models\Product;
 use App\Models\UserCustomBouquets;
 use Illuminate\Http\Request;
 
@@ -20,7 +18,8 @@ class CartController extends Controller
     {
         $cart = Cart::where('user_id', auth()->id())
             ->with([
-                'items.additions',   'customBouquets.products',
+                'items.additions',
+                'customBouquets.products',
                 'customBouquets.userCustomBouquetAdditions'
             ])
             ->first();
@@ -44,6 +43,19 @@ class CartController extends Controller
         $cart = Cart::firstOrCreate(['user_id' => auth()->id()]);
 
         foreach ($request->items as $itemData) {
+
+            $product = Product::find($itemData['product_id']);
+
+
+            if ($product->quantity <= 0) {
+                return response()->json(['message' => "The product '{$product->name}' is out of stock."], 400);
+            }
+
+
+            if ($product->quantity < $itemData['quantity']) {
+                return response()->json(['message' => "The requested quantity for '{$product->name}' exceeds available stock. Available quantity: {$product->quantity}."], 400);
+            }
+
             $cartItem = CartItem::create([
                 'cart_id' => $cart->id,
                 'product_id' => $itemData['product_id'],
@@ -73,6 +85,20 @@ class CartController extends Controller
 
         $cart = Cart::firstOrCreate(['user_id' => auth()->id()]);
         $bouquet = UserCustomBouquets::with('products.additions')->findOrFail($request->bouquet_id);
+
+        foreach ($bouquet->products as $bouquetProduct) {
+            $product = Product::find($bouquetProduct->product_id);
+
+
+            if ($product->quantity <= 0) {
+                return response()->json(['message' => "The product '{$product->name}' in the bouquet is out of stock."], 400);
+            }
+
+
+            if ($product->quantity < $bouquetProduct->quantity) {
+                return response()->json(['message' => "The requested quantity for '{$product->name}' in the bouquet exceeds available stock. Available quantity: {$product->quantity}."], 400);
+            }
+        }
 
         // $cart->customBouquets()->attach($request->bouquet_id);
         foreach ($bouquet->products as $bouquetProduct) {

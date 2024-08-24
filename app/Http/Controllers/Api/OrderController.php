@@ -3,15 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Contracts\ApiResponse;
+use App\Events\OrderStatusUpdated;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Addresses\AddressResource;
 use App\Http\Resources\Order\OrderResource;
-use App\Models\Addition;
-use App\Models\Address;
 use App\Models\Alert;
 use App\Models\Cart;
-use App\Models\LoyaltyPoint;
-use App\Models\LoyaltyTransaction;
 use App\Models\Order;
 use App\Models\OrderCustomBouquet;
 use App\Models\OrderItem;
@@ -35,8 +31,8 @@ class OrderController extends Controller
 
 
         $cart = Cart::where('user_id', $request->user_id)->first();
-        if (!$cart) {
-            return ApiResponse::notFound('No cart found for the user');
+        if (!$cart || $cart->items->isEmpty()) {
+            return ApiResponse::notFound('No items found in the cart for the user');
         }
 
         $cartItems = $cart->items;
@@ -50,7 +46,6 @@ class OrderController extends Controller
         foreach ($cartItems as $cartItem) {
             $product = $cartItem->product;
 
-
             if ($product->quantity < $cartItem->quantity) {
 
                 $cartItem->quantity = $product->quantity;
@@ -59,14 +54,11 @@ class OrderController extends Controller
             $product->quantity -= $cartItem->quantity;
             $product->save();
 
-            // if ($product->quantity <= $product->min_level) {
 
-            //     if (!Alert::where('product_id', $product->id)->exists()) {
-            //         Alert::create(['product_id' => $product->id]);
-            //     }
-            // }
             if ($product->quantity <= $product->min_level) {
-                Alert::firstOrCreate(['product_id' => $product->id]);
+                if (!Alert::where('product_id', $product->id)->exists()) {
+                    Alert::create(['product_id' => $product->id]);
+                }
             }
 
             $totalPrice += $product->price * $cartItem->quantity;
@@ -109,6 +101,11 @@ class OrderController extends Controller
                 'user_custom_bouquet_id' => $request->custom_bouquet_id,
             ]);
         }
+
+        $cart->items()->delete(); // Delete all items from the cart
+        $cart->customBouquets()->detach(); // Detach any custom bouquets from the cart
+
+        event(new OrderStatusUpdated($order));
 
         return ApiResponse::success(['message' => 'Order created successfully', 'order' => OrderResource::make($order)]);
     }
@@ -223,7 +220,7 @@ class OrderController extends Controller
 
     public function getMyOrders(Request $request)
     {
-        $userId = Auth::id(); 
+        $userId = Auth::id();
 
         $orders = Order::where('user_id', $userId)->get();
 

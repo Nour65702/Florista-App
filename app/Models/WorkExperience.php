@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WorkExperience extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
-       
+        'employee_id',
         'from_date',
         'to_date',
         'company',

@@ -46,11 +46,18 @@ class EmployeeResource extends Resource
                                 ->searchable()
                                 ->preload()
                                 ->default(null),
-                            Select::make('provider_id')
-                                ->relationship(name: 'provider', titleAttribute: 'name')
+                            Select::make('branch_id')
+                                ->relationship(name: 'branch', titleAttribute: 'branch_name')
                                 ->searchable()
                                 ->preload()
                                 ->default(null),
+                            Select::make('employee_type')
+                                ->options([
+                                    'hr' => 'HR',
+                                    'accounting' => 'Accounting',
+                                    'provider' => 'Provider',
+                                ])
+                                ->required(),
 
                             TextInput::make('first_name')
                                 ->required()
@@ -103,8 +110,8 @@ class EmployeeResource extends Resource
                                         ->columnSpanFull(),
                                 ])->columns(10)
 
-                                ]),
-                        Section::make('Employee Contract')
+                        ]),
+                    Section::make('Employee Contract')
                         ->schema([
                             Repeater::make('Contracts')
                                 ->relationship()
@@ -120,12 +127,12 @@ class EmployeeResource extends Resource
                                         ->preload()
                                         ->required()
                                         ->columnSpan(5),
-                                        DatePicker::make('start_date')
+                                    DatePicker::make('start_date')
                                         ->required()
                                         ->columnSpan(5),
-                                        DatePicker::make('end_date')
+                                    DatePicker::make('end_date')
                                         ->columnSpan(5),
-                                   
+
                                 ])->columns(10)
 
                         ])
@@ -141,8 +148,12 @@ class EmployeeResource extends Resource
                     ->label('User')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('provider.name')
-                    ->label('Provider')
+                TextColumn::make('branch.branch_name')
+                    ->label('Branch')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('employee_type')
+                    ->label('Type')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('first_name')
@@ -172,9 +183,9 @@ class EmployeeResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('user')
-                ->relationship('user','name'),
-                SelectFilter::make('provider')
-                ->relationship('provider','name')
+                    ->relationship('user', 'name'),
+                SelectFilter::make('branch')
+                    ->relationship('branch', 'branch_name')
             ])
             ->actions([
                 ActionGroup::make([
@@ -182,7 +193,7 @@ class EmployeeResource extends Resource
                     ViewAction::make(),
                     DeleteAction::make()
                 ]),
-              
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
